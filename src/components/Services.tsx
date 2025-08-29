@@ -21,54 +21,35 @@ const Services = () => {
      const services = [
      {
        icon: Bath,
-       title: 'Complete Remodeling',
+       title: 'Complete Bathroom Remodeling',
        description: 'Total transformation of your bathroom with custom design and premium materials.',
        features: ['3D Design', 'Premium Materials', 'Complete Installation'],
-       price: 'From $12,900'
+       price: 'From $12,900',
+       image: '/ChatGPT Image 28 ago 2025, 04_25_47 p.m..png'
      },
      {
        icon: Droplets,
        title: 'Tub-to-Shower Conversion',
-       description: 'Convert your bathtub into a modern and accessible shower.',
-       features: ['Walk-in Shower', 'Tempered Glass', 'Accessibility'],
-       price: 'From $7,900'
+       description: 'Convert your bathtub into a modern and accessible walk-in shower.',
+       features: ['Walk-in Shower', 'Tempered Glass', 'Accessibility Features'],
+       price: 'From $7,900',
+       image: '/ChatGPT Image 28 ago 2025, 04_25_51 p.m..png'
      },
      {
        icon: Palette,
-       title: 'Vanity Update',
-       description: 'Renew your vanity with modern and functional options.',
-       features: ['Floating Vanity', 'LED Mirror', 'Storage'],
-       price: 'From $3,900'
+       title: 'Vanity & Fixture Updates',
+       description: 'Renew your vanity and fixtures with modern and functional options.',
+       features: ['Floating Vanity', 'LED Mirror', 'Smart Storage'],
+       price: 'From $3,900',
+       image: '/ChatGPT Image 28 ago 2025, 04_25_48 p.m..png'
      },
      {
        icon: Square,
-       title: 'Tile Replacement',
+       title: 'Tile & Flooring Replacement',
        description: 'Update your bathroom look with modern and durable tiles.',
        features: ['Premium Tiles', 'Professional Installation', 'Perfect Grout'],
-       price: 'From $5,900'
-     }
-   ]
-
-     const benefits = [
-     {
-       icon: Shield,
-       title: 'Licensed & Insured',
-       description: 'Guaranteed work with complete licenses and insurance'
-     },
-     {
-       icon: Clock,
-       title: 'Fast Delivery',
-       description: 'Projects completed in 1-3 weeks'
-     },
-     {
-       icon: Award,
-       title: 'Premium Warranty',
-       description: 'Extended warranty on materials and workmanship'
-     },
-     {
-       icon: Wrench,
-       title: 'Licensed Professionals',
-       description: 'Certified team with 10+ years of experience'
+       price: 'From $5,900',
+       image: '/ChatGPT Image 28 ago 2025, 04_25_53 p.m..png'
      }
    ]
 
@@ -108,7 +89,7 @@ const Services = () => {
              Our <span className="text-gradient">Services</span>
            </h2>
            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-             We offer complete solutions to transform your bathroom into the space of your dreams
+             We offer comprehensive bathroom remodeling solutions to transform your space into a luxury retreat
            </p>
         </motion.div>
 
@@ -117,14 +98,24 @@ const Services = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {services.map((service, index) => (
             <motion.div
               key={service.title}
               variants={itemVariants}
-              className="card p-6 text-center group"
+              className="card p-6 text-center group hover:shadow-2xl transition-all duration-300 overflow-hidden"
             >
+              {/* Service Image */}
+              <div className="relative h-48 mb-4 overflow-hidden rounded-lg">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+              </div>
+              
               <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
                 <service.icon className="w-8 h-8 text-white" />
               </div>
@@ -138,41 +129,6 @@ const Services = () => {
               <div className="text-lg font-bold text-primary-600">{service.price}</div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Benefits Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="bg-white rounded-2xl shadow-xl p-8 md:p-12"
-        >
-                     <div className="text-center mb-12">
-             <h3 className="text-3xl font-bold mb-4">
-               Why choose <span className="text-gradient">Premium Bathrooms</span>?
-             </h3>
-             <p className="text-xl text-gray-600">
-               We are your best choice for bathroom remodeling
-             </p>
-           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={benefit.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <benefit.icon className="w-7 h-7 text-primary-600" />
-                </div>
-                <h4 className="text-lg font-semibold mb-2 text-gray-800">{benefit.title}</h4>
-                <p className="text-gray-600 text-sm">{benefit.description}</p>
-              </motion.div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </section>

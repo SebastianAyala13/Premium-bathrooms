@@ -22,6 +22,7 @@ const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
+  isOwner: z.string().min(1, 'Please select if you are the property owner'),
   service: z.string().min(1, 'Please select a service'),
   budget: z.string().min(1, 'Please select a budget range'),
   timeline: z.string().min(1, 'Please select a timeline'),
@@ -33,7 +34,7 @@ type FormData = z.infer<typeof formSchema>
 const LeadForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [showFloatingForm, setShowFloatingForm] = useState(false)
+
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
 
@@ -71,6 +72,12 @@ const LeadForm = () => {
   ]
 
   const onSubmit = async (data: FormData) => {
+    // Verificar si es propietario
+    if (data.isOwner === 'no') {
+      alert('We apologize, but we can only provide services to property owners. Please contact your landlord or property manager for bathroom remodeling services.')
+      return
+    }
+
     setIsSubmitting(true)
     
     // Simular envío de formulario
@@ -93,38 +100,29 @@ const LeadForm = () => {
     setTimeout(() => setIsSubmitted(false), 5000)
   }
 
-  // Mostrar formulario flotante después de hacer scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY
-      const windowHeight = window.innerHeight
-      setShowFloatingForm(scrollPosition > windowHeight * 0.5)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const FormContent = ({ isFloating = false }: { isFloating?: boolean }) => (
+  const FormContent = () => (
     <motion.form
       onSubmit={handleSubmit(onSubmit)}
-      className={`bg-white rounded-2xl shadow-xl p-6 md:p-8 ${
-        isFloating ? 'w-full max-w-md' : ''
-      }`}
+      className="bg-white rounded-2xl shadow-xl p-6 md:p-8"
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8 }}
     >
       <div className="text-center mb-8">
-                 <h3 className="text-2xl md:text-3xl font-bold mb-2">
-           {isFloating ? 'Get Your Quote!' : 'Request Your Free Quote'}
-         </h3>
-         <p className="text-gray-600">
-           {isFloating 
-             ? 'Complete the form and we\'ll contact you within 24 hours'
-             : 'Fill out the form and our team will contact you within 24 hours'
-           }
-         </p>
+        <div className="bg-gradient-primary text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <Send className="w-8 h-8" />
+        </div>
+                           <h3 className="text-2xl md:text-3xl font-bold mb-2">
+            Request Your Free Quote
+          </h3>
+        <p className="text-gray-600 mb-4">
+            Fill out the form and our team will contact you within 24 hours
+          </p>
+        <div className="bg-success-50 border border-success-200 rounded-lg p-3">
+          <p className="text-success-700 text-sm font-medium">
+            ⏰ Limited Time: Free Design Consultation + 10% Off
+          </p>
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -212,7 +210,36 @@ const LeadForm = () => {
           )}
         </div>
 
-                 {/* Service */}
+        {/* Property Owner */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Are you the property owner? *
+          </label>
+          <div className="relative">
+            <select
+              {...register('isOwner')}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 ${
+                errors.isOwner ? 'border-red-500' : 'border-gray-300'
+              }`}
+            >
+              <option value="">Select an option</option>
+              <option value="yes">Yes, I am the owner</option>
+              <option value="no">No, I am a tenant</option>
+            </select>
+          </div>
+          {errors.isOwner && (
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-red-500 text-sm mt-1 flex items-center"
+            >
+              <AlertCircle className="w-4 h-4 mr-1" />
+              {errors.isOwner.message}
+            </motion.p>
+          )}
+        </div>
+
+        {/* Service */}
          <div>
            <label className="block text-sm font-medium text-gray-700 mb-2">
              Service of Interest *
@@ -329,7 +356,7 @@ const LeadForm = () => {
           disabled={isSubmitting}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full bg-gradient-primary text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-primary text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
         >
                      {isSubmitting ? (
              <>
@@ -339,10 +366,16 @@ const LeadForm = () => {
            ) : (
              <>
                <Send className="w-5 h-5" />
-               <span>Request Free Quote</span>
+              <span>Get My Free Quote Now</span>
              </>
            )}
         </motion.button>
+
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-500">
+            🔒 Your information is secure and will never be shared
+          </p>
+        </div>
       </div>
 
       {/* Success Message */}
@@ -357,7 +390,7 @@ const LeadForm = () => {
             <div className="flex items-center space-x-2 text-success-700">
               <CheckCircle className="w-5 h-5" />
                              <span className="font-medium">
-                 Thank you! We'll contact you within 24 hours.
+                 Thank you! We will contact you within 24 hours.
                </span>
             </div>
           </motion.div>
@@ -382,7 +415,17 @@ const LeadForm = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8 }}
+              className="relative"
             >
+              {/* Background Image */}
+              <div className="absolute inset-0 opacity-5">
+                <img 
+                  src="/leadform_form.jpg" 
+                  alt="Contact Form Background"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <div className="relative z-10">
                              <h2 className="text-4xl md:text-5xl font-bold mb-6">
                  Ready to transform your <span className="text-gradient">bathroom</span>?
                </h2>
@@ -390,7 +433,7 @@ const LeadForm = () => {
                  Request your free quote with no obligation. Our team of experts will help you create the bathroom of your dreams.
                </p>
               
-              <div className="space-y-4">
+              <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-success-100 rounded-full flex items-center justify-center">
                     <CheckCircle className="w-5 h-5 text-success-600" />
@@ -409,6 +452,22 @@ const LeadForm = () => {
                    </div>
                    <span className="text-gray-700">Custom design included</span>
                  </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-success-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-success-600" />
+                  </div>
+                  <span className="text-gray-700">Professional consultation</span>
+                </div>
+              </div>
+
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
+                <h4 className="text-lg font-semibold text-primary-800 mb-2">
+                  🎯 Limited Time Offer
+                </h4>
+                <p className="text-primary-700">
+                  Get a <strong>free design consultation</strong> and <strong>10% off</strong> your bathroom remodeling project when you request a quote this month!
+                </p>
+              </div>
               </div>
             </motion.div>
 
@@ -420,19 +479,7 @@ const LeadForm = () => {
         </div>
       </section>
 
-      {/* Floating Form */}
-      <AnimatePresence>
-        {showFloatingForm && (
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            className="fixed bottom-6 right-6 z-40"
-          >
-            <FormContent isFloating />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
     </>
   )
 }

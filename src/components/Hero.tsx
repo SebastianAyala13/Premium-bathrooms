@@ -20,8 +20,15 @@ const Hero = () => {
 
   return (
          <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-secondary-50" />
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src="/ChatGPT Image 28 ago 2025, 04_25_43 p.m..png" 
+          alt="Luxury Bathroom Background"
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/90 via-white/95 to-secondary-50/90" />
+      </div>
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -116,7 +123,7 @@ const Hero = () => {
              <motion.button
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
-               onClick={() => document.querySelector('#gallery')?.scrollIntoView({ behavior: 'smooth' })}
+               onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
                className="flex items-center space-x-2 btn-outline text-lg px-8 py-4"
              >
                <span>View Our Work</span>
