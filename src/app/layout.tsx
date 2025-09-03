@@ -233,15 +233,60 @@ export default function RootLayout({
         <meta name="business:contact_data:price_range" content="$$" />
         <meta name="business:contact_data:payment_accepted" content="Cash, Credit Card, Check, Financing" />
         
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Favicon and app icons */}
-        <link rel="icon" href="/logoprimebath.png" />
-        <link rel="shortcut icon" href="/logoprimebath.png" />
-        <link rel="apple-touch-icon" href="/logoprimebath.png" />
-        <link rel="manifest" href="/manifest.json" />
+                 {/* Preconnect to external domains for performance */}
+         <link rel="preconnect" href="https://fonts.googleapis.com" />
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+         
+                   {/* TrustedForm Lead Tracking - Professional Implementation */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  // TrustedForm Lead Tracking
+                  var tf = document.createElement('script');
+                  tf.type = 'text/javascript';
+                  tf.async = true;
+                  tf.src = ("https:" == document.location.protocol ? 'https' : 'http') +
+                    '://api.trustedform.com/trustedform.js?field=xxTrustedFormCertUrl&use_tagged_consent=true&l=' +
+                    new Date().getTime() + Math.random();
+                  var s = document.getElementsByTagName('script')[0]; 
+                  s.parentNode.insertBefore(tf, s);
+                  
+                  // Enhanced tracking for form interactions
+                  document.addEventListener('DOMContentLoaded', function() {
+                    // Track form focus events
+                    var forms = document.querySelectorAll('form');
+                    forms.forEach(function(form) {
+                      var inputs = form.querySelectorAll('input, select, textarea');
+                      inputs.forEach(function(input) {
+                        input.addEventListener('focus', function() {
+                          if (window.TrustedForm) {
+                            window.TrustedForm.tag();
+                          }
+                        });
+                      });
+                    });
+                    
+                    // Track form submission attempts
+                    document.addEventListener('submit', function(e) {
+                      if (window.TrustedForm) {
+                        window.TrustedForm.tag();
+                      }
+                    });
+                  });
+                })();
+              `
+            }}
+          />
+          <noscript>
+            <img src='https://api.trustedform.com/ns.gif' />
+          </noscript>
+         
+         {/* Favicon and app icons */}
+         <link rel="icon" href="/logoprimebath.png" />
+         <link rel="shortcut icon" href="/logoprimebath.png" />
+         <link rel="apple-touch-icon" href="/logoprimebath.png" />
+         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>
         {children}

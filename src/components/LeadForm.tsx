@@ -80,16 +80,35 @@ const LeadForm = () => {
 
     setIsSubmitting(true)
     
+    // Obtener certificado TrustedForm si está disponible
+    let trustedFormCert = ''
+    if (typeof window !== 'undefined' && (window as any).TrustedForm) {
+      try {
+        trustedFormCert = (window as any).TrustedForm.getCertUrl()
+      } catch (error) {
+        console.log('TrustedForm certificate not available:', error)
+      }
+    }
+    
+    // Preparar datos del formulario con certificado
+    const formDataWithCert = {
+      ...data,
+      trustedFormCert,
+      timestamp: new Date().toISOString(),
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
+      referrer: typeof window !== 'undefined' ? document.referrer : ''
+    }
+    
+    console.log('Form data with TrustedForm:', formDataWithCert)
+    
     // Simular envío de formulario
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    console.log('Form data:', data)
     
     // Aquí iría la lógica real de envío
     // await fetch('/api/contact', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data)
+    //   body: JSON.stringify(formDataWithCert)
     // })
     
     setIsSubmitting(false)
