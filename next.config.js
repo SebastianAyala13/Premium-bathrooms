@@ -1,54 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  images: {
-    domains: ['images.unsplash.com'],
-    formats: ['image/webp', 'image/avif'],
-  },
+  output: 'export',             // genera /out estático
+  images: { unoptimized: true}, // permite next/image sin servidor
+  trailingSlash: true,          // evita 404 en hosting estático
+  reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  reactStrictMode: true,
   swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
-    ]
-  },
-  async redirects() {
-    return [
-      {
-        source: '/home',
-        destination: '/',
-        permanent: true,
-      },
-    ]
-  },
+  // Headers y redirects no funcionan en export estático
+  // Se manejan a nivel de servidor web (Apache/Nginx)
 }
 
-module.exports = nextConfig
+export default nextConfig
