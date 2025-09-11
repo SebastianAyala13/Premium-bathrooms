@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { getFormEndpoint } from '@/lib/formConfig'
 import { 
   User, 
   Mail, 
@@ -23,6 +24,7 @@ const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
+  zipCode: z.string().min(5, 'Please enter a valid ZIP code'),
   isOwner: z.string().min(1, 'Please select if you are the property owner'),
   service: z.string().min(1, 'Please select a service'),
   budget: z.string().min(1, 'Please select a budget range'),
@@ -82,45 +84,68 @@ const LeadForm = () => {
 
     setIsSubmitting(true)
     
-    // Obtener certificado TrustedForm si está disponible
-    let trustedFormCert = ''
-    if (typeof window !== 'undefined' && (window as any).TrustedForm) {
-      try {
-        trustedFormCert = (window as any).TrustedForm.getCertUrl()
-      } catch (error) {
-        console.log('TrustedForm certificate not available:', error)
+    try {
+      // Obtener certificado TrustedForm si está disponible
+      let trustedFormCert = ''
+      if (typeof window !== 'undefined' && (window as any).TrustedForm) {
+        try {
+          trustedFormCert = (window as any).TrustedForm.getCertUrl()
+        } catch (error) {
+          console.log('TrustedForm certificate not available:', error)
+        }
       }
+      
+      // Mapear datos del formulario a los campos requeridos por Zapier
+      const zapierData = {
+        fullName: data.name,
+        email: data.email,
+        phone: data.phone,
+        zipCode: data.zipCode,
+        service: data.service,
+        ownership: data.isOwner === 'yes' ? 'Owner' : 'Tenant',
+        bathroomStyle: data.service, // Usar el servicio como estilo de baño
+        urgency: data.timeline,
+        timestamp: new Date().toISOString(),
+        source: 'Website Form',
+        language: 'English',
+        website: 'premiumbathrooms.com',
+        summary: data.message || `Service: ${data.service}, Budget: ${data.budget}, Timeline: ${data.timeline}`,
+        trustedFormCert,
+        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
+        referrer: typeof window !== 'undefined' ? document.referrer : ''
+      }
+      
+      console.log('Sending to Zapier:', zapierData)
+      
+      // Enviar a Zapier a través de nuestra API
+      const endpoint = getFormEndpoint()
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(zapierData)
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const result = await response.json()
+      console.log('Zapier response:', result)
+      
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+      reset()
+      
+      // Redirigir a la página de Thank You después de 2 segundos
+      setTimeout(() => {
+        router.push('/thank-you')
+      }, 2000)
+      
+    } catch (error) {
+      console.error('Error sending form:', error)
+      setIsSubmitting(false)
+      alert('There was an error sending your form. Please try again or contact us directly.')
     }
-    
-    // Preparar datos del formulario con certificado
-    const formDataWithCert = {
-      ...data,
-      trustedFormCert,
-      timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
-      referrer: typeof window !== 'undefined' ? document.referrer : ''
-    }
-    
-    console.log('Form data with TrustedForm:', formDataWithCert)
-    
-    // Simular envío de formulario
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Aquí iría la lógica real de envío
-    // await fetch('/api/contact', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formDataWithCert)
-    // })
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    reset()
-    
-    // Redirigir a la página de Thank You después de 2 segundos
-    setTimeout(() => {
-      router.push('/thank-you')
-    }, 2000)
   }
 
   const FormContent = () => (
@@ -205,22 +230,22 @@ const LeadForm = () => {
           )}
         </div>
 
-                 {/* Phone */}
-         <div>
-           <label className="block text-sm font-medium text-gray-700 mb-2">
-             Phone *
-           </label>
-           <div className="relative">
-             <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-             <input
-               {...register('phone')}
-               type="tel"
-               className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 ${
-                 errors.phone ? 'border-red-500' : 'border-gray-300'
-               }`}
-               placeholder="(555) 123-4567"
-             />
-           </div>
+        {/* Phone */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Phone *
+          </label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              {...register('phone')}
+              type="tel"
+              className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 ${
+                errors.phone ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="(555) 123-4567"
+            />
+          </div>
           {errors.phone && (
             <motion.p
               initial={{ opacity: 0, y: -10 }}
@@ -229,6 +254,33 @@ const LeadForm = () => {
             >
               <AlertCircle className="w-4 h-4 mr-1" />
               {errors.phone.message}
+            </motion.p>
+          )}
+        </div>
+
+        {/* ZIP Code */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            ZIP Code *
+          </label>
+          <div className="relative">
+            <input
+              {...register('zipCode')}
+              type="text"
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 ${
+                errors.zipCode ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="90210"
+            />
+          </div>
+          {errors.zipCode && (
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-red-500 text-sm mt-1 flex items-center"
+            >
+              <AlertCircle className="w-4 h-4 mr-1" />
+              {errors.zipCode.message}
             </motion.p>
           )}
         </div>
