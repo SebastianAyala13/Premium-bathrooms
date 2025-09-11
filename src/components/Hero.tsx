@@ -19,7 +19,7 @@ const Hero = () => {
   ]
 
   return (
-         <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+         <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24 lg:pt-32">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
@@ -58,7 +58,7 @@ const Hero = () => {
         />
       </div>
 
-      <div className="container-custom relative z-10">
+      <div className="container-custom relative z-10 pt-8 md:pt-12">
         <div className="text-center max-w-4xl mx-auto px-4">
           {/* Main Title */}
                      <motion.h1

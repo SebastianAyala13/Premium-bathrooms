@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
+// Configuración para export estático
+export const dynamic = 'error'
+
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-gray-50">

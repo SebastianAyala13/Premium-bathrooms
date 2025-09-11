@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { 
   User, 
   Mail, 
@@ -34,6 +35,7 @@ type FormData = z.infer<typeof formSchema>
 const LeadForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const router = useRouter()
 
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
@@ -115,8 +117,10 @@ const LeadForm = () => {
     setIsSubmitted(true)
     reset()
     
-    // Resetear el estado después de 5 segundos
-    setTimeout(() => setIsSubmitted(false), 5000)
+    // Redirigir a la página de Thank You después de 2 segundos
+    setTimeout(() => {
+      router.push('/thank-you')
+    }, 2000)
   }
 
   const FormContent = () => (
@@ -408,9 +412,9 @@ const LeadForm = () => {
           >
             <div className="flex items-center space-x-2 text-success-700">
               <CheckCircle className="w-5 h-5" />
-                             <span className="font-medium">
-                 Thank you! We will contact you within 24 hours.
-               </span>
+              <span className="font-medium">
+                Thank you! Redirecting to confirmation page...
+              </span>
             </div>
           </motion.div>
         )}

@@ -1,0 +1,26 @@
+DirectoryIndex index.html index.php
+AddType application/javascript .js
+AddType text/css .css
+AddType image/svg+xml .svg
+AddType video/mp4 .mp4
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Deja pasar assets de Next export
+  RewriteRule ^_next/ - [L]
+  # Sirve archivos existentes tal cual
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule . - [L]
+  # (Las reglas de WordPress pueden ir después)
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+</IfModule>

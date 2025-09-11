@@ -48,7 +48,7 @@ const Sitemap = () => {
     {
       title: 'Legal Pages',
       links: [
-        { name: 'Privacy Policy', href: '/privacy-policy', description: 'How we collect and protect your information' },
+        { name: 'Privacy Policy', href: 'privacy-policy', description: 'How we collect and protect your information' },
         { name: 'Terms & Conditions', href: '/terms-conditions', description: 'Terms of service and project agreements' },
         { name: 'Partners', href: '/partners', description: 'Our trusted partners and suppliers' },
       ]

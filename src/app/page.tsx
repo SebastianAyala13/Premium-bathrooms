@@ -12,6 +12,9 @@ import Contact from '@/components/Contact'
 import LeadForm from '@/components/LeadForm'
 import Footer from '@/components/Footer'
 
+// Configuración para export estático
+export const dynamic = 'error'
+
 export default function Home() {
   return (
     <main className="min-h-screen">
