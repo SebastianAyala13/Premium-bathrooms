@@ -144,7 +144,12 @@ const LeadForm = () => {
     } catch (error) {
       console.error('Error sending form:', error)
       setIsSubmitting(false)
-      alert('There was an error sending your form. Please try again or contact us directly.')
+      
+      // Mostrar error más específico
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      console.log('Detailed error:', errorMessage)
+      
+      alert(`Error: ${errorMessage}. Please try again or contact us directly.`)
     }
   }
 
