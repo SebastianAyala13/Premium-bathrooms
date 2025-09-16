@@ -52,13 +52,23 @@ export default function LeadForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) {
+        const ct = res.headers.get('content-type') || ''
+        let msg = 'Request failed'
+        if (ct.includes('application/json')) {
+          try { const j = await res.json(); msg = j?.error || JSON.stringify(j) } catch {}
+        } else {
+          try { msg = await res.text() } catch {}
+        }
+        throw new Error(msg)
+      }
       e.currentTarget.reset()
       setTfToken('')
       window.location.href = '/thank-you'
     } catch (err) {
       console.error(err)
-      alert('Error sending form.')
+      const msg = err instanceof Error ? err.message : 'Error sending form.'
+      alert(`Error sending form: ${msg}`)
     } finally {
       setLoading(false)
     }
