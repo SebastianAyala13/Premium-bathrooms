@@ -22,8 +22,9 @@ export default function LeadForm() {
 
   async function onSubmit(e) {
     e.preventDefault()
+    const formEl = e.currentTarget
     setLoading(true)
-    const f = new FormData(e.currentTarget)
+    const f = new FormData(formEl)
 
     const payload = {
       lp_campaign_id: process.env.NEXT_PUBLIC_LP_CAMPAIGN_ID || 'Provided',
@@ -62,7 +63,7 @@ export default function LeadForm() {
         }
         throw new Error(msg)
       }
-      e.currentTarget.reset()
+      formEl.reset()
       setTfToken('')
       window.location.href = '/thank-you'
     } catch (err) {
@@ -103,7 +104,7 @@ export default function LeadForm() {
         </div>
         <div>
           <label className="block text-sm font-medium">State</label>
-          <input name="state" required maxLength={2} className="mt-1 w-full rounded-xl border p-3" />
+          <input name="state" required className="mt-1 w-full rounded-xl border p-3" placeholder="CA or California" />
         </div>
         <div>
           <label className="block text-sm font-medium">ZIP</label>
