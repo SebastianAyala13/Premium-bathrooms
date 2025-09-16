@@ -9,24 +9,23 @@ export default function LeadForm() {
 
   useEffect(() => {
     if (!tfHiddenRef.current) return
-    const s = document.createElement('script')
-    s.src = 'https://api.trustedform.com/trustedform.js?field=trusted_form_cert_id&l=' + encodeURIComponent(window.location.href)
-    s.async = true
-    document.body.appendChild(s)
-    s.onload = () => {
+    // Ya cargamos el script global en layout.tsx con field=trusted_form_cert_id
+    const applyFromGlobal = () => {
       try {
-        const maybe = (window.TrustedForm && window.TrustedForm.getCertUrl && window.TrustedForm.getCertUrl()) || ''
-        if (maybe) {
-          if (tfHiddenRef.current) tfHiddenRef.current.value = maybe
-          setTfToken(maybe)
+        const val = (window.TrustedForm && window.TrustedForm.getCertUrl && window.TrustedForm.getCertUrl()) || ''
+        if (val) {
+          if (tfHiddenRef.current) tfHiddenRef.current.value = val
+          setTfToken(val)
         }
       } catch {}
     }
+    applyFromGlobal()
     const obs = new MutationObserver(() => {
       if (tfHiddenRef.current?.value) setTfToken(tfHiddenRef.current.value)
     })
     obs.observe(tfHiddenRef.current, { attributes: true, attributeFilter: ['value'] })
-    return () => { obs.disconnect(); document.body.removeChild(s) }
+    const id = setInterval(applyFromGlobal, 300)
+    return () => { obs.disconnect(); clearInterval(id) }
   }, [])
 
   async function waitForTrustedFormToken(maxWaitMs = 2000) {
