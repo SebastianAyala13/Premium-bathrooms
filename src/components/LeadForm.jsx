@@ -13,6 +13,15 @@ export default function LeadForm() {
     s.src = 'https://api.trustedform.com/trustedform.js?field=trusted_form_cert_id&l=' + encodeURIComponent(window.location.href)
     s.async = true
     document.body.appendChild(s)
+    s.onload = () => {
+      try {
+        const maybe = (window.TrustedForm && window.TrustedForm.getCertUrl && window.TrustedForm.getCertUrl()) || ''
+        if (maybe) {
+          if (tfHiddenRef.current) tfHiddenRef.current.value = maybe
+          setTfToken(maybe)
+        }
+      } catch {}
+    }
     const obs = new MutationObserver(() => {
       if (tfHiddenRef.current?.value) setTfToken(tfHiddenRef.current.value)
     })
@@ -20,10 +29,31 @@ export default function LeadForm() {
     return () => { obs.disconnect(); document.body.removeChild(s) }
   }, [])
 
+  async function waitForTrustedFormToken(maxWaitMs = 2000) {
+    const start = Date.now()
+    const poll = async () => {
+      const hiddenVal = tfHiddenRef.current?.value || ''
+      let fromApi = ''
+      try { fromApi = (window.TrustedForm && window.TrustedForm.getCertUrl && window.TrustedForm.getCertUrl()) || '' } catch {}
+      const val = hiddenVal || fromApi
+      if (val) {
+        if (!hiddenVal && tfHiddenRef.current) tfHiddenRef.current.value = val
+        setTfToken(val)
+        return val
+      }
+      if (Date.now() - start >= maxWaitMs) return ''
+      await new Promise(r => setTimeout(r, 150))
+      return poll()
+    }
+    return poll()
+  }
+
   async function onSubmit(e) {
     e.preventDefault()
     const formEl = e.currentTarget
     setLoading(true)
+    // Espera breve para que TrustedForm complete el token
+    await waitForTrustedFormToken(2000)
     const f = new FormData(formEl)
 
     const payload = {
@@ -40,7 +70,7 @@ export default function LeadForm() {
       address: f.get('address')?.toString().trim() || '',
       phone_home: f.get('phone_home')?.toString().trim() || '',
       email_address: f.get('email_address')?.toString().trim() || '',
-      trusted_form_cert_id: tfToken || f.get('trusted_form_cert_id')?.toString() || '',
+      trusted_form_cert_id: (tfHiddenRef.current?.value || tfToken || f.get('trusted_form_cert_id')?.toString() || ''),
       landing_page: window.location.href,
       repair_or_replace: f.get('repair_or_replace')?.toString() || '',
       tcpaText: document.getElementById('tcpa_text')?.innerText || '',
