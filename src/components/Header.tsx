@@ -26,7 +26,7 @@ const Header = () => {
     { name: 'Projects', href: '#projects' },
     { name: 'Certifications', href: '#certifications' },
     { name: 'FAQ', href: '#faq' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Contact', href: '#lead-form' },
   ]
 
   const scrollToSection = (href: string) => {
@@ -94,7 +94,7 @@ const Header = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center space-x-2 bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white font-semibold py-2.5 px-4 lg:py-3 lg:px-5 xl:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm lg:text-base whitespace-nowrap"
-              onClick={() => scrollToSection('#contact')}
+              onClick={() => scrollToSection('#lead-form')}
             >
               <Send className="w-4 h-4" />
               <span>Get Free Quote</span>
@@ -142,7 +142,7 @@ const Header = () => {
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     className="flex items-center justify-center space-x-2 bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl w-full"
-                    onClick={() => scrollToSection('#contact')}
+                    onClick={() => scrollToSection('#lead-form')}
                   >
                     <Send className="w-4 h-4" />
                     <span>Get Free Quote</span>

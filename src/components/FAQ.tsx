@@ -245,7 +245,7 @@ const FAQ = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => {
-                  const element = document.querySelector('#contact')
+                  const element = document.querySelector('#lead-form')
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth' })
                   }

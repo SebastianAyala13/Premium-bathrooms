@@ -140,7 +140,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-gray-300 hover:text-white transition-colors duration-200">
+                <a href="#lead-form" className="text-gray-300 hover:text-white transition-colors duration-200">
                   Contact
                 </a>
               </li>

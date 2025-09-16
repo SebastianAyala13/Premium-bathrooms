@@ -167,7 +167,7 @@ const Contact = () => {
 
             <button 
               onClick={() => {
-                const element = document.querySelector('#contact')
+                const element = document.querySelector('#lead-form')
                 if (element) {
                   element.scrollIntoView({ behavior: 'smooth' })
                 }
