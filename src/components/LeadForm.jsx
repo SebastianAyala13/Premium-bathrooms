@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export default function LeadForm() {
+export default function LeadForm({ formId = 'lead-form' }) {
   const [loading, setLoading] = useState(false)
   const [tfToken, setTfToken] = useState('')
   const tfHiddenRef = useRef(null)
@@ -105,7 +105,7 @@ export default function LeadForm() {
   }
 
   return (
-    <form id="lead-form" onSubmit={onSubmit} className="max-w-2xl mx-auto p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200">
+    <form id={formId} onSubmit={onSubmit} className="max-w-2xl mx-auto p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200">
       <div className="bg-white/90 backdrop-blur rounded-2xl p-6 md:p-8 shadow-xl">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold">Request Your Free Quote</h3>
