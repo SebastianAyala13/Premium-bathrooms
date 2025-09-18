@@ -174,10 +174,10 @@ export default function LeadForm({ formId = 'lead-form' }) {
           <a className="underline" href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> and 
           <a className="underline ml-1" href="/terms-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>.
         </p>
-        <label className="mt-2 flex items-center gap-2">
-          <input type="checkbox" name="consent-language" required />
+        <div className="mt-2">
           <span className="text-sm">I agree to be contacted.</span>
-        </label>
+          <input type="hidden" name="consent-language" value="on" />
+        </div>
       </div>
 
       <button type="submit" disabled={loading} className="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-3 font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60">
