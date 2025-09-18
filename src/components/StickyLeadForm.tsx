@@ -28,10 +28,12 @@ export default function StickyLeadForm() {
   }, [])
 
   return (
-    <div className={`hidden lg:block fixed right-6 top-28 w-[380px] z-40 transition-all duration-300 ${
+    <div className={`hidden xl:block fixed right-4 top-16 w-[320px] max-h-[calc(100vh-80px)] overflow-y-auto z-40 transition-all duration-300 ${
       isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
     }`}>
-      <LeadForm formId="lead-form-sticky" />
+      <div className="transform scale-75 origin-top">
+        <LeadForm formId="lead-form-sticky" />
+      </div>
     </div>
   )
 }

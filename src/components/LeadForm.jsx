@@ -73,7 +73,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
       landing_page: window.location.href,
       repair_or_replace: f.get('repair_or_replace')?.toString() || '',
       tcpaText: document.getElementById('tcpa_text')?.innerText || '',
-      tcpa_consent: f.get('tcpa_consent') === 'on',
+      tcpa_consent: f.get('consent-language') === 'on',
     }
 
     try {
@@ -170,19 +170,18 @@ export default function LeadForm({ formId = 'lead-form' }) {
 
       <div className="rounded-xl border p-3 bg-gray-50">
         <p id="tcpa_text" className="text-xs leading-relaxed">
-          By clicking Submit, You agree to give express consent to receive marketing communications regarding HomeImprovement services by automatic dialing system and pre-recorded calls and artificial voice messages from Home Services Partners at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registery. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
+          By clicking Submit, You agree to give express consent to receive marketing communications regarding Home Improvement services by automatic dialing system and pre-recorded calls and artificial voice messages from <a className="underline" href="/partners" target="_blank" rel="noreferrer">Home Services Partners</a> at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registry. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
           <a className="underline" href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> and 
-          <a className="underline ml-1" href="/terms-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>. See 
-          <a className="underline ml-1" href="https://offers.homequotepos.com/bathroom/v4" target="_blank" rel="noreferrer">Home Services Partners</a>.
+          <a className="underline ml-1" href="/terms-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>.
         </p>
         <label className="mt-2 flex items-center gap-2">
-          <input type="checkbox" name="tcpa_consent" required />
+          <input type="checkbox" name="consent-language" required />
           <span className="text-sm">I agree to be contacted.</span>
         </label>
       </div>
 
       <button type="submit" disabled={loading} className="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-3 font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60">
-        {loading ? 'Sending…' : 'Get My Free Quote'}
+        {loading ? 'Sending…' : 'Submit'}
       </button>
       </div>
     </form>
