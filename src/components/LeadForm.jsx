@@ -159,66 +159,69 @@ export default function LeadForm({ formId = 'lead-form' }) {
   const isDesktopForm = formId === 'lead-form-desktop'
   
   return (
-    <form ref={formRef} id={formId} onSubmit={onSubmit} className={`${isDesktopForm ? 'max-w-full' : 'max-w-2xl mx-auto'} p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200`}>
-      <div className={`bg-white/90 backdrop-blur rounded-2xl ${isDesktopForm ? 'p-4' : 'p-6 md:p-8'} shadow-xl`}>
+    <form ref={formRef} id={formId} onSubmit={onSubmit} className={`${isDesktopForm ? 'max-w-full h-full flex flex-col' : 'max-w-2xl mx-auto'} p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200`}>
+      <div className={`bg-white/90 backdrop-blur rounded-2xl ${isDesktopForm ? 'p-3 flex-1 flex flex-col' : 'p-6 md:p-8'} shadow-xl`}>
       {!isDesktopForm && (
         <div className="text-center mb-6">
           <h3 className="text-2xl font-bold">Request Your Free Quote</h3>
           <p className="text-gray-600 text-sm">Fast response. No obligation.</p>
         </div>
       )}
-      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>First name</label>
-          <input name="first_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+      <div className={`${isDesktopForm ? 'space-y-2 flex-1' : 'space-y-4'}`}>
+        <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>First name</label>
+            <input name="first_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Last name</label>
+            <input name="last_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
         </div>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Last name</label>
-          <input name="last_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
-        </div>
-      </div>
 
-      <div>
-        <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Address</label>
-        <input name="address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
-      </div>
-      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-3 gap-4'}`}>
         <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>City</label>
-          <input name="city" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Address</label>
+          <input name="address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
         </div>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>State</label>
-          <input name="state" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} placeholder="CA or California" />
+        
+        <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-3 gap-4'}`}>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>City</label>
+            <input name="city" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>State</label>
+            <input name="state" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} placeholder="CA or California" />
+          </div>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>ZIP</label>
+            <input name="zip_code" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
         </div>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>ZIP</label>
-          <input name="zip_code" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
-        </div>
-      </div>
 
-      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Email</label>
-          <input type="email" name="email_address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+        <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Email</label>
+            <input type="email" name="email_address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
+          <div>
+            <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Phone</label>
+            <input name="phone_home" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          </div>
         </div>
-        <div>
-          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Phone</label>
-          <input name="phone_home" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
-        </div>
-      </div>
 
-      <div>
-        <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Service of interest</label>
-        <div className={`mt-2 flex ${isDesktopForm ? 'gap-4' : 'gap-6'}`}>
-          <label className="inline-flex items-center gap-2">
-            <input type="radio" name="repair_or_replace" value="repair" required />
-            <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Repair</span>
-          </label>
-          <label className="inline-flex items-center gap-2">
-            <input type="radio" name="repair_or_replace" value="replace" />
-            <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Replace</span>
-          </label>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Service of interest</label>
+          <div className={`mt-2 flex ${isDesktopForm ? 'gap-4' : 'gap-6'}`}>
+            <label className="inline-flex items-center gap-2">
+              <input type="radio" name="repair_or_replace" value="repair" required />
+              <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Repair</span>
+            </label>
+            <label className="inline-flex items-center gap-2">
+              <input type="radio" name="repair_or_replace" value="replace" />
+              <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Replace</span>
+            </label>
+          </div>
         </div>
       </div>
 
