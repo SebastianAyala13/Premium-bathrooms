@@ -155,83 +155,88 @@ export default function LeadForm({ formId = 'lead-form' }) {
     }
   }
 
+  // Determinar si es el formulario desktop (más compacto)
+  const isDesktopForm = formId === 'lead-form-desktop'
+  
   return (
-    <form ref={formRef} id={formId} onSubmit={onSubmit} className="max-w-2xl mx-auto p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200">
-      <div className="bg-white/90 backdrop-blur rounded-2xl p-6 md:p-8 shadow-xl">
-      <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold">Request Your Free Quote</h3>
-        <p className="text-gray-600 text-sm">Fast response. No obligation.</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form ref={formRef} id={formId} onSubmit={onSubmit} className={`${isDesktopForm ? 'max-w-full' : 'max-w-2xl mx-auto'} p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200`}>
+      <div className={`bg-white/90 backdrop-blur rounded-2xl ${isDesktopForm ? 'p-4' : 'p-6 md:p-8'} shadow-xl`}>
+      {!isDesktopForm && (
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-bold">Request Your Free Quote</h3>
+          <p className="text-gray-600 text-sm">Fast response. No obligation.</p>
+        </div>
+      )}
+      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
         <div>
-          <label className="block text-sm font-medium">First name</label>
-          <input name="first_name" required className="mt-1 w-full rounded-xl border p-3" />
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>First name</label>
+          <input name="first_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
         </div>
         <div>
-          <label className="block text-sm font-medium">Last name</label>
-          <input name="last_name" required className="mt-1 w-full rounded-xl border p-3" />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium">Address</label>
-        <input name="address" required className="mt-1 w-full rounded-xl border p-3" />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium">City</label>
-          <input name="city" required className="mt-1 w-full rounded-xl border p-3" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">State</label>
-          <input name="state" required className="mt-1 w-full rounded-xl border p-3" placeholder="CA or California" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">ZIP</label>
-          <input name="zip_code" required className="mt-1 w-full rounded-xl border p-3" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input type="email" name="email_address" required className="mt-1 w-full rounded-xl border p-3" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Phone</label>
-          <input name="phone_home" required className="mt-1 w-full rounded-xl border p-3" />
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Last name</label>
+          <input name="last_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Service of interest</label>
-        <div className="mt-2 flex gap-6">
+        <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Address</label>
+        <input name="address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+      </div>
+      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-3 gap-4'}`}>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>City</label>
+          <input name="city" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+        </div>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>State</label>
+          <input name="state" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} placeholder="CA or California" />
+        </div>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>ZIP</label>
+          <input name="zip_code" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+        </div>
+      </div>
+
+      <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Email</label>
+          <input type="email" name="email_address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+        </div>
+        <div>
+          <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Phone</label>
+          <input name="phone_home" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'}`} />
+        </div>
+      </div>
+
+      <div>
+        <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Service of interest</label>
+        <div className={`mt-2 flex ${isDesktopForm ? 'gap-4' : 'gap-6'}`}>
           <label className="inline-flex items-center gap-2">
             <input type="radio" name="repair_or_replace" value="repair" required />
-            <span>Repair</span>
+            <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Repair</span>
           </label>
           <label className="inline-flex items-center gap-2">
             <input type="radio" name="repair_or_replace" value="replace" />
-            <span>Replace</span>
+            <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>Replace</span>
           </label>
         </div>
       </div>
 
       <input ref={tfHiddenRef} type="hidden" name="trusted_form_cert_id" />
 
-      <div className="rounded-xl border p-3 bg-gray-50">
-        <p id="tcpa_text" className="text-xs leading-relaxed">
+      <div className={`rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'} bg-gray-50`}>
+        <p id="tcpa_text" className={`${isDesktopForm ? 'text-xs' : 'text-xs'} leading-relaxed`}>
           By clicking Submit, You agree to give express consent to receive marketing communications regarding Home Improvement services by automatic dialing system and pre-recorded calls and artificial voice messages from <a className="underline" href="/partners" target="_blank" rel="noreferrer">Home Services Partners</a> at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registry. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
           <a className="underline" href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> and 
           <a className="underline ml-1" href="/terms-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>.
         </p>
-        <div className="mt-2">
-          <span className="text-sm">I agree to be contacted.</span>
+        <div className={`${isDesktopForm ? 'mt-1' : 'mt-2'}`}>
+          <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>I agree to be contacted.</span>
           <input type="hidden" name="consent-language" value="on" />
         </div>
       </div>
 
-      <button type="submit" disabled={loading} className="w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-3 font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60">
+      <button type="submit" disabled={loading} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''}`}>
         {loading ? 'Sending…' : 'Submit'}
       </button>
       </div>

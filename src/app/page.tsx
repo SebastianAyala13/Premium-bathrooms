@@ -36,7 +36,7 @@ export default function Home() {
     return (
       <>
         <Header />
-        <div className="lg:mr-96">
+        <div className="lg:mr-80">
           <Hero />
           <Services />
           <Process />
@@ -60,7 +60,7 @@ export default function Home() {
       {isDesktop ? (
         <>
           {/* Desktop: contenido con barra lateral fija */}
-          <div className="lg:mr-96">
+          <div className="lg:mr-80">
             <Hero />
             <Services />
             <Process />
@@ -75,13 +75,15 @@ export default function Home() {
           </div>
 
           {/* Formulario lateral fijo para PC */}
-          <div id="form-section" className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-30 overflow-y-auto">
-            <div className="p-6">
-              <div className="mb-4">
-                <h2 className="text-xl font-bold text-gray-900 text-center">🏠 Get Your Free Quote</h2>
-                <p className="text-sm text-gray-600 text-center mt-1">Complete consultation</p>
+          <div id="form-section" className="fixed right-0 top-0 h-full w-80 bg-white border-l border-gray-200 shadow-xl z-30 flex flex-col">
+            <div className="p-4 flex-shrink-0">
+              <div className="mb-3">
+                <h2 className="text-lg font-bold text-gray-900 text-center">🏠 Get Your Free Quote</h2>
+                <p className="text-xs text-gray-600 text-center mt-1">Complete consultation</p>
               </div>
-              <div id="lead-form-desktop" className="border-2 border-teal-200 rounded-2xl p-2">
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <div id="lead-form-desktop" className="h-full overflow-y-auto px-4 pb-4">
                 <LeadForm formId="lead-form-desktop" />
               </div>
             </div>
