@@ -3,16 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-// Declaración global para TypeScript
-declare global {
-  interface Window {
-    TrustedForm?: {
-      getCertUrl?: () => string;
-    };
-    dataLayer?: Record<string, unknown>[];
-  }
-}
-
 export default function LeadForm({ formId = 'lead-form' }) {
   const [loading, setLoading] = useState(false)
   const [tfToken, setTfToken] = useState('')

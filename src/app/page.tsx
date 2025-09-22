@@ -17,7 +17,6 @@ import Footer from '@/components/Footer'
 
 // Configuración para export estático
 export const dynamic = 'error'
-export const revalidate = 0
 
 export default function Home() {
   const [isDesktop, setIsDesktop] = useState(false)
