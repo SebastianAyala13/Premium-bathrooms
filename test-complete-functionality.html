@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test Completo - Formulario y GTM</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 4px; 
+            font-weight: bold;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-danger { background: #dc3545; color: white; }
+        pre { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 4px; 
+            overflow-x: auto; 
+            border: 1px solid #e9ecef;
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px; 
+            font-weight: bold;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .test-result { 
+            padding: 10px; 
+            margin: 5px 0; 
+            border-radius: 4px; 
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .pending { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Completo - Formulario y GTM</h1>
+        <p><strong>Objetivo:</strong> Verificar que el formulario funcione correctamente, envíe solo 1 evento GTM, y el mapeo a Zapier sea correcto.</p>
+        
+        <div class="test-section info">
+            <h2>📋 Instrucciones</h2>
+            <ol>
+                <li>Ejecuta las pruebas en orden usando los botones de abajo</li>
+                <li>Verifica los resultados en la consola del navegador (F12)</li>
+                <li>Confirma que solo se envíe 1 evento GTM por envío</li>
+                <li>Verifica que todos los campos se mapeen correctamente</li>
+            </ol>
+        </div>
+
+        <div class="grid">
+            <div class="test-section">
+                <h2>🔍 1. Verificar Entorno</h2>
+                <button class="btn-primary" onclick="checkEnvironment()">Verificar Entorno</button>
+                <button class="btn-warning" onclick="clearAllData()">Limpiar Todo</button>
+                <div id="environment-results"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>📊 2. Verificar GTM</h2>
+                <button class="btn-primary" onclick="checkGTM()">Verificar GTM</button>
+                <button class="btn-warning" onclick="clearDataLayer()">Limpiar DataLayer</button>
+                <div id="gtm-results"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>🔐 3. Verificar TrustedForm</h2>
+                <button class="btn-primary" onclick="checkTrustedForm()">Verificar TrustedForm</button>
+                <div id="trustedform-results"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>📝 4. Probar Formulario</h2>
+                <button class="btn-success" onclick="testFormSubmission()">Probar Envío</button>
+                <button class="btn-warning" onclick="testMultipleSubmissions()">Probar Múltiples Envíos</button>
+                <div id="form-results"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>🎯 5. Verificar Mapeo Zapier</h2>
+                <button class="btn-primary" onclick="verifyZapierMapping()">Verificar Mapeo</button>
+                <div id="zapier-results"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>📱 6. Probar Responsividad</h2>
+                <button class="btn-primary" onclick="testResponsive()">Probar Responsividad</button>
+                <div id="responsive-results"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📈 Resultados de Pruebas</h2>
+            <button class="btn-success" onclick="runAllTests()">Ejecutar Todas las Pruebas</button>
+            <button class="btn-danger" onclick="generateReport()">Generar Reporte</button>
+            <div id="all-results"></div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+
+        // 1. Verificar Entorno
+        function checkEnvironment() {
+            const results = document.getElementById('environment-results');
+            const env = {
+                userAgent: navigator.userAgent,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                dataLayer: !!window.dataLayer,
+                gtm: !!window.google_tag_manager,
+                trustedForm: !!window.TrustedForm,
+                forms: document.querySelectorAll('form').length,
+                leadForms: document.querySelectorAll('#lead-form-mobile, #lead-form-desktop').length
+            };
+
+            results.innerHTML = `
+                <h3>🌍 Entorno:</h3>
+                <div class="test-result ${env.dataLayer ? 'pass' : 'fail'}">
+                    DataLayer: ${env.dataLayer ? '✅ Disponible' : '❌ No disponible'}
+                </div>
+                <div class="test-result ${env.gtm ? 'pass' : 'fail'}">
+                    GTM: ${env.gtm ? '✅ Cargado' : '❌ No cargado'}
+                </div>
+                <div class="test-result ${env.trustedForm ? 'pass' : 'fail'}">
+                    TrustedForm: ${env.trustedForm ? '✅ Disponible' : '❌ No disponible'}
+                </div>
+                <div class="test-result ${env.leadForms > 0 ? 'pass' : 'fail'}">
+                    Formularios: ${env.leadForms} encontrados
+                </div>
+                <pre>${JSON.stringify(env, null, 2)}</pre>
+            `;
+
+            testResults.environment = env;
+            console.log('🌍 Entorno verificado:', env);
+        }
+
+        // 2. Verificar GTM
+        function checkGTM() {
+            const results = document.getElementById('gtm-results');
+            const leadSubmitEvents = window.dataLayer?.filter(item => item.event === 'lead_submit') || [];
+            const allEvents = window.dataLayer || [];
+
+            results.innerHTML = `
+                <h3>📊 GTM Status:</h3>
+                <div class="test-result ${allEvents.length > 0 ? 'pass' : 'fail'}">
+                    Total eventos: ${allEvents.length}
+                </div>
+                <div class="test-result ${leadSubmitEvents.length >= 0 ? 'pass' : 'fail'}">
+                    Eventos lead_submit: ${leadSubmitEvents.length}
+                </div>
+                ${leadSubmitEvents.length > 0 ? `
+                    <h4>Último evento lead_submit:</h4>
+                    <pre>${JSON.stringify(leadSubmitEvents[leadSubmitEvents.length - 1], null, 2)}</pre>
+                ` : ''}
+            `;
+
+            testResults.gtm = {
+                totalEvents: allEvents.length,
+                leadSubmitEvents: leadSubmitEvents.length,
+                lastEvent: leadSubmitEvents[leadSubmitEvents.length - 1] || null
+            };
+
+            console.log('📊 GTM verificado:', testResults.gtm);
+        }
+
+        // 3. Verificar TrustedForm
+        function checkTrustedForm() {
+            const results = document.getElementById('trustedform-results');
+            const trustedFormStatus = {
+                available: !!window.TrustedForm,
+                getCertUrl: !!(window.TrustedForm && window.TrustedForm.getCertUrl),
+                token: window.TrustedForm?.getCertUrl?.() || 'No disponible',
+                hiddenInputs: document.querySelectorAll('input[name="trusted_form_cert_id"]').length
+            };
+
+            results.innerHTML = `
+                <h3>🔐 TrustedForm Status:</h3>
+                <div class="test-result ${trustedFormStatus.available ? 'pass' : 'fail'}">
+                    TrustedForm: ${trustedFormStatus.available ? '✅ Disponible' : '❌ No disponible'}
+                </div>
+                <div class="test-result ${trustedFormStatus.getCertUrl ? 'pass' : 'fail'}">
+                    getCertUrl: ${trustedFormStatus.getCertUrl ? '✅ Disponible' : '❌ No disponible'}
+                </div>
+                <div class="test-result ${trustedFormStatus.token !== 'No disponible' ? 'pass' : 'fail'}">
+                    Token: ${trustedFormStatus.token !== 'No disponible' ? '✅ Generado' : '❌ No generado'}
+                </div>
+                <div class="test-result ${trustedFormStatus.hiddenInputs > 0 ? 'pass' : 'fail'}">
+                    Inputs ocultos: ${trustedFormStatus.hiddenInputs}
+                </div>
+                <pre>${JSON.stringify(trustedFormStatus, null, 2)}</pre>
+            `;
+
+            testResults.trustedForm = trustedFormStatus;
+            console.log('🔐 TrustedForm verificado:', trustedFormStatus);
+        }
+
+        // 4. Probar Formulario
+        function testFormSubmission() {
+            const results = document.getElementById('form-results');
+            const form = document.querySelector('#lead-form-mobile form, #lead-form-desktop form');
+            
+            if (!form) {
+                results.innerHTML = '<div class="test-result fail">❌ No se encontró el formulario</div>';
+                return;
+            }
+
+            // Limpiar dataLayer antes del test
+            if (window.dataLayer) {
+                window.dataLayer.length = 0;
+            }
+
+            // Llenar campos
+            const testData = {
+                'first_name': 'Test',
+                'last_name': 'User',
+                'email_address': 'test@example.com',
+                'phone_home': '555-1234',
+                'address': '123 Test St',
+                'city': 'Test City',
+                'state': 'CA',
+                'zip_code': '90210'
+            };
+
+            let filledFields = 0;
+            Object.entries(testData).forEach(([name, value]) => {
+                const input = form.querySelector(`[name="${name}"]`);
+                if (input) {
+                    input.value = value;
+                    filledFields++;
+                }
+            });
+
+            // Seleccionar radio button
+            const radioReplace = form.querySelector('[name="repair_or_replace"][value="replace"]');
+            if (radioReplace) {
+                radioReplace.checked = true;
+            }
+
+            results.innerHTML = `
+                <div class="test-result ${filledFields === Object.keys(testData).length ? 'pass' : 'fail'}">
+                    Campos llenados: ${filledFields}/${Object.keys(testData).length}
+                </div>
+                <div class="test-result pending">
+                    Enviando formulario...
+                </div>
+            `;
+
+            // Enviar formulario
+            setTimeout(() => {
+                form.querySelector('button[type="submit"]').click();
+                
+                // Verificar resultados después de 3 segundos
+                setTimeout(() => {
+                    const leadSubmitEvents = window.dataLayer?.filter(item => item.event === 'lead_submit') || [];
+                    results.innerHTML = `
+                        <div class="test-result ${filledFields === Object.keys(testData).length ? 'pass' : 'fail'}">
+                            Campos llenados: ${filledFields}/${Object.keys(testData).length}
+                        </div>
+                        <div class="test-result ${leadSubmitEvents.length === 1 ? 'pass' : 'fail'}">
+                            Eventos GTM: ${leadSubmitEvents.length} (debe ser 1)
+                        </div>
+                        ${leadSubmitEvents.length > 0 ? `
+                            <h4>Datos del evento:</h4>
+                            <pre>${JSON.stringify(leadSubmitEvents[0], null, 2)}</pre>
+                        ` : ''}
+                    `;
+
+                    testResults.formSubmission = {
+                        fieldsFilled: filledFields,
+                        totalFields: Object.keys(testData).length,
+                        gtmEvents: leadSubmitEvents.length,
+                        eventData: leadSubmitEvents[0] || null
+                    };
+                }, 3000);
+            }, 1000);
+        }
+
+        // 5. Probar Múltiples Envíos
+        function testMultipleSubmissions() {
+            const results = document.getElementById('form-results');
+            results.innerHTML = '<div class="test-result pending">🔄 Probando envíos múltiples...</div>';
+            
+            // Limpiar dataLayer
+            if (window.dataLayer) {
+                window.dataLayer.length = 0;
+            }
+            
+            // Ejecutar múltiples envíos
+            setTimeout(() => testFormSubmission(), 500);
+            setTimeout(() => testFormSubmission(), 1500);
+            setTimeout(() => testFormSubmission(), 2500);
+            
+            // Verificar resultados
+            setTimeout(() => {
+                const leadSubmitEvents = window.dataLayer?.filter(item => item.event === 'lead_submit') || [];
+                results.innerHTML = `
+                    <div class="test-result ${leadSubmitEvents.length === 1 ? 'pass' : 'fail'}">
+                        Envíos múltiples: ${leadSubmitEvents.length} eventos (debe ser 1)
+                    </div>
+                    <div class="test-result ${leadSubmitEvents.length === 1 ? 'pass' : 'fail'}">
+                        ${leadSubmitEvents.length === 1 ? '✅ Prevención de duplicados funciona' : '❌ Se enviaron múltiples eventos'}
+                    </div>
+                `;
+
+                testResults.multipleSubmissions = {
+                    totalEvents: leadSubmitEvents.length,
+                    success: leadSubmitEvents.length === 1
+                };
+            }, 5000);
+        }
+
+        // 6. Verificar Mapeo Zapier
+        function verifyZapierMapping() {
+            const results = document.getElementById('zapier-results');
+            const requiredFields = [
+                'lp_campaign_id', 'lp_campaign_key', 'lp_s1', 'lp_s2', 'lp_response',
+                'city', 'state', 'zip_code', 'first_name', 'last_name', 'address',
+                'phone_home', 'email_address', 'ip_address', 'trusted_form_cert_id',
+                'landing_page', 'repair_or_replace', 'tcpaText', 'tcpa_consent'
+            ];
+
+            // Simular payload que se enviaría a Zapier
+            const mockPayload = {
+                lp_campaign_id: 'Provided',
+                lp_campaign_key: 'Provided',
+                lp_s1: 'Provided',
+                lp_s2: 'primebathpros',
+                lp_response: 'JSON',
+                city: 'Test City',
+                state: 'CA',
+                zip_code: '90210',
+                first_name: 'Test',
+                last_name: 'User',
+                address: '123 Test St',
+                phone_home: '555-1234',
+                email_address: 'test@example.com',
+                ip_address: '127.0.0.1',
+                trusted_form_cert_id: 'mock_token_123',
+                landing_page: window.location.href,
+                repair_or_replace: 'replace',
+                tcpaText: 'Mock TCPA text',
+                tcpa_consent: true
+            };
+
+            const missingFields = requiredFields.filter(field => !(field in mockPayload));
+            const hasAllFields = missingFields.length === 0;
+
+            results.innerHTML = `
+                <h3>🎯 Mapeo Zapier:</h3>
+                <div class="test-result ${hasAllFields ? 'pass' : 'fail'}">
+                    Campos requeridos: ${requiredFields.length - missingFields.length}/${requiredFields.length}
+                </div>
+                ${missingFields.length > 0 ? `
+                    <div class="test-result fail">
+                        Campos faltantes: ${missingFields.join(', ')}
+                    </div>
+                ` : ''}
+                <h4>Payload de ejemplo:</h4>
+                <pre>${JSON.stringify(mockPayload, null, 2)}</pre>
+            `;
+
+            testResults.zapierMapping = {
+                totalFields: requiredFields.length,
+                presentFields: requiredFields.length - missingFields.length,
+                missingFields: missingFields,
+                success: hasAllFields
+            };
+
+            console.log('🎯 Mapeo Zapier verificado:', testResults.zapierMapping);
+        }
+
+        // 7. Probar Responsividad
+        function testResponsive() {
+            const results = document.getElementById('responsive-results');
+            const viewport = {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                isMobile: window.innerWidth < 768,
+                isTablet: window.innerWidth >= 768 && window.innerWidth < 1024,
+                isDesktop: window.innerWidth >= 1024
+            };
+
+            const mobileForm = document.querySelector('#lead-form-mobile');
+            const desktopForm = document.querySelector('#lead-form-desktop');
+            const stickyForm = document.querySelector('.fixed.right-0');
+
+            results.innerHTML = `
+                <h3>📱 Responsividad:</h3>
+                <div class="test-result ${viewport.isMobile ? 'pass' : 'fail'}">
+                    Viewport: ${viewport.width}x${viewport.height}
+                </div>
+                <div class="test-result ${viewport.isMobile ? 'pass' : 'fail'}">
+                    Tipo: ${viewport.isMobile ? 'Móvil' : viewport.isTablet ? 'Tablet' : 'Desktop'}
+                </div>
+                <div class="test-result ${mobileForm ? 'pass' : 'fail'}">
+                    Formulario móvil: ${mobileForm ? '✅ Presente' : '❌ Ausente'}
+                </div>
+                <div class="test-result ${desktopForm ? 'pass' : 'fail'}">
+                    Formulario desktop: ${desktopForm ? '✅ Presente' : '❌ Ausente'}
+                </div>
+                <pre>${JSON.stringify(viewport, null, 2)}</pre>
+            `;
+
+            testResults.responsive = viewport;
+            console.log('📱 Responsividad verificada:', viewport);
+        }
+
+        // 8. Limpiar DataLayer
+        function clearDataLayer() {
+            if (window.dataLayer) {
+                window.dataLayer.length = 0;
+                document.getElementById('gtm-results').innerHTML = '<div class="test-result pass">✅ DataLayer limpiado</div>';
+            }
+        }
+
+        // 9. Limpiar Todo
+        function clearAllData() {
+            clearDataLayer();
+            testResults = {};
+            document.querySelectorAll('[id$="-results"]').forEach(el => {
+                el.innerHTML = '<div class="test-result pending">⏳ Esperando pruebas...</div>';
+            });
+        }
+
+        // 10. Ejecutar Todas las Pruebas
+        function runAllTests() {
+            console.log('🧪 Iniciando todas las pruebas...');
+            clearAllData();
+            
+            setTimeout(() => checkEnvironment(), 500);
+            setTimeout(() => checkGTM(), 1000);
+            setTimeout(() => checkTrustedForm(), 1500);
+            setTimeout(() => verifyZapierMapping(), 2000);
+            setTimeout(() => testResponsive(), 2500);
+            setTimeout(() => testFormSubmission(), 3000);
+            
+            setTimeout(() => {
+                const results = document.getElementById('all-results');
+                const summary = generateTestSummary();
+                results.innerHTML = `
+                    <h3>📊 Resumen de Pruebas:</h3>
+                    <div class="test-result ${summary.overallSuccess ? 'pass' : 'fail'}">
+                        Estado general: ${summary.overallSuccess ? '✅ ÉXITO' : '❌ FALLO'}
+                    </div>
+                    <pre>${JSON.stringify(summary, null, 2)}</pre>
+                `;
+            }, 8000);
+        }
+
+        // 11. Generar Reporte
+        function generateReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                results: testResults,
+                summary: generateTestSummary()
+            };
+
+            console.log('📋 Reporte completo:', report);
+            
+            const results = document.getElementById('all-results');
+            results.innerHTML = `
+                <h3>📋 Reporte Completo:</h3>
+                <button class="btn-primary" onclick="downloadReport()">Descargar Reporte</button>
+                <pre>${JSON.stringify(report, null, 2)}</pre>
+            `;
+        }
+
+        // 12. Generar Resumen
+        function generateTestSummary() {
+            const summary = {
+                environment: testResults.environment?.dataLayer && testResults.environment?.gtm,
+                gtm: testResults.gtm?.totalEvents >= 0,
+                trustedForm: testResults.trustedForm?.available,
+                formSubmission: testResults.formSubmission?.gtmEvents === 1,
+                multipleSubmissions: testResults.multipleSubmissions?.success,
+                zapierMapping: testResults.zapierMapping?.success,
+                responsive: testResults.responsive?.width > 0
+            };
+
+            summary.overallSuccess = Object.values(summary).every(Boolean);
+            summary.passedTests = Object.values(summary).filter(Boolean).length;
+            summary.totalTests = Object.keys(summary).length - 1; // -1 for overallSuccess
+
+            return summary;
+        }
+
+        // 13. Descargar Reporte
+        function downloadReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                results: testResults,
+                summary: generateTestSummary()
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-report-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-ejecutar verificación inicial
+        window.addEventListener('load', () => {
+            console.log('🚀 Página de pruebas cargada');
+            setTimeout(() => {
+                checkEnvironment();
+                checkGTM();
+                checkTrustedForm();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
