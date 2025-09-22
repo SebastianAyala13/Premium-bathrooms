@@ -5,7 +5,7 @@ import { ArrowRight, Star, CheckCircle } from 'lucide-react'
 
 const Hero = () => {
   const scrollToContact = () => {
-    const element = document.querySelector('#lead-form')
+    const element = document.querySelector('#form-section')
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }

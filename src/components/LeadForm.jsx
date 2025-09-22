@@ -1,11 +1,33 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+// Declaración global para TypeScript
+declare global {
+  interface Window {
+    TrustedForm?: {
+      getCertUrl?: () => string;
+    };
+    dataLayer?: Record<string, unknown>[];
+  }
+}
 
 export default function LeadForm({ formId = 'lead-form' }) {
   const [loading, setLoading] = useState(false)
   const [tfToken, setTfToken] = useState('')
   const tfHiddenRef = useRef(null)
+  const hasSubmitted = useRef(false)
+  const formRef = useRef(null)
+  const router = useRouter()
+
+  // Log para verificar cuántas instancias se montan
+  useEffect(() => {
+    console.log('🔧 Form component mounted - timestamp:', new Date().toISOString(), 'formId:', formId)
+    return () => {
+      console.log('🔧 Form component unmounted - timestamp:', new Date().toISOString(), 'formId:', formId)
+    }
+  }, [formId])
 
   useEffect(() => {
     if (!tfHiddenRef.current) return
@@ -49,8 +71,18 @@ export default function LeadForm({ formId = 'lead-form' }) {
 
   async function onSubmit(e) {
     e.preventDefault()
-    const formEl = e.currentTarget
+    
+    // Prevenir envíos duplicados
+    if (hasSubmitted.current || loading) {
+      console.log('🚫 Form submission blocked - already submitted or submitting')
+      return
+    }
+    
+    console.log('🚀 Form submission started - hasSubmitted:', hasSubmitted.current, 'loading:', loading, 'formId:', formId)
+    hasSubmitted.current = true
     setLoading(true)
+    
+    const formEl = e.currentTarget
     // Espera breve para que TrustedForm complete el token
     await waitForTrustedFormToken(2000)
     const f = new FormData(formEl)
@@ -92,20 +124,49 @@ export default function LeadForm({ formId = 'lead-form' }) {
         }
         throw new Error(msg)
       }
+      
+      console.log('Form submitted successfully')
+      
+      // Disparar Custom Event para GTM (solo una vez)
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        const eventData = {
+          event: 'lead_submit',
+          form_id: formId,
+          form_type: 'bathroom_remodeling',
+          lead_data: {
+            first_name: payload.first_name,
+            last_name: payload.last_name,
+            email: payload.email_address,
+            phone: payload.phone_home,
+            service: payload.repair_or_replace,
+            zip_code: payload.zip_code,
+            city: payload.city,
+            state: payload.state
+          }
+        }
+        
+        window.dataLayer.push(eventData)
+        console.log('✅ Custom GTM event pushed: lead_submit')
+        console.log('📊 Event data:', eventData)
+        console.log('📈 Total dataLayer events:', window.dataLayer.length)
+      }
+      
       formEl.reset()
       setTfToken('')
-      window.location.href = '/thank-you'
+      router.push('/thank-you')
     } catch (err) {
       console.error(err)
       const msg = err instanceof Error ? err.message : 'Error sending form.'
       alert(`Error sending form: ${msg}`)
+      // Reset hasSubmitted en caso de error para permitir reintento
+      hasSubmitted.current = false
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form id={formId} onSubmit={onSubmit} className="max-w-2xl mx-auto p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200">
+    <form ref={formRef} id={formId} onSubmit={onSubmit} className="max-w-2xl mx-auto p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200">
       <div className="bg-white/90 backdrop-blur rounded-2xl p-6 md:p-8 shadow-xl">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold">Request Your Free Quote</h3>

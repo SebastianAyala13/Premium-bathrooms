@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Form Mapping & GTM Events</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Form Mapping & GTM Events</h1>
+    
+    <div class="test-section info">
+        <h2>📋 Instrucciones de Prueba</h2>
+        <p>1. Abre la consola del navegador (F12)</p>
+        <p>2. Ejecuta los tests usando los botones de abajo</p>
+        <p>3. Verifica que solo se envíe 1 evento GTM por envío</p>
+        <p>4. Confirma que todos los campos se mapeen correctamente a Zapier</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Verificar dataLayer</h2>
+        <button onclick="checkDataLayer()">Verificar dataLayer</button>
+        <button onclick="clearDataLayer()">Limpiar dataLayer</button>
+        <div id="datalayer-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Llenar y Enviar Formulario</h2>
+        <button onclick="testForm()">Llenar y Enviar Formulario</button>
+        <button onclick="testMultipleSubmissions()">Probar Envíos Múltiples</button>
+        <div id="form-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Verificar TrustedForm Token</h2>
+        <button onclick="checkTrustedForm()">Verificar TrustedForm</button>
+        <div id="trustedform-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Resultados de Pruebas</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        // Función para verificar dataLayer
+        function checkDataLayer() {
+            const results = document.getElementById('datalayer-results');
+            const leadSubmitEvents = window.dataLayer?.filter(item => item.event === 'lead_submit') || [];
+            
+            results.innerHTML = `
+                <h3>📈 DataLayer Status:</h3>
+                <p><strong>Total eventos:</strong> ${window.dataLayer?.length || 0}</p>
+                <p><strong>Eventos lead_submit:</strong> ${leadSubmitEvents.length}</p>
+                <p><strong>Último evento:</strong> ${leadSubmitEvents.length > 0 ? JSON.stringify(leadSubmitEvents[leadSubmitEvents.length - 1], null, 2) : 'Ninguno'}</p>
+            `;
+            
+            console.log('🎯 Eventos lead_submit:', leadSubmitEvents.length);
+            console.log('📊 Todos los eventos:', window.dataLayer);
+        }
+
+        // Función para limpiar dataLayer
+        function clearDataLayer() {
+            if (window.dataLayer) {
+                window.dataLayer.length = 0;
+                document.getElementById('datalayer-results').innerHTML = '<p class="success">✅ DataLayer limpiado</p>';
+            }
+        }
+
+        // Función para llenar y enviar formulario
+        function testForm() {
+            const results = document.getElementById('form-results');
+            const form = document.querySelector('#lead-form-mobile form, #lead-form-desktop form');
+            
+            if (!form) {
+                results.innerHTML = '<p class="error">❌ No se encontró el formulario</p>';
+                return;
+            }
+
+            // Llenar campos
+            const fields = {
+                'first_name': 'Test',
+                'last_name': 'User',
+                'email_address': 'test@example.com',
+                'phone_home': '555-1234',
+                'address': '123 Test St',
+                'city': 'Test City',
+                'state': 'CA',
+                'zip_code': '90210'
+            };
+
+            Object.entries(fields).forEach(([name, value]) => {
+                const input = form.querySelector(`[name="${name}"]`);
+                if (input) {
+                    input.value = value;
+                    console.log(`✅ Campo ${name} llenado con: ${value}`);
+                } else {
+                    console.log(`❌ Campo ${name} no encontrado`);
+                }
+            });
+
+            // Seleccionar radio button
+            const radioReplace = form.querySelector('[name="repair_or_replace"][value="replace"]');
+            if (radioReplace) {
+                radioReplace.checked = true;
+                console.log('✅ Radio button "replace" seleccionado');
+            }
+
+            results.innerHTML = '<p class="info">📝 Formulario llenado. Verificando envío...</p>';
+
+            // Enviar formulario
+            setTimeout(() => {
+                form.querySelector('button[type="submit"]').click();
+                console.log('🚀 Formulario enviado');
+            }, 1000);
+        }
+
+        // Función para probar envíos múltiples
+        function testMultipleSubmissions() {
+            const results = document.getElementById('form-results');
+            results.innerHTML = '<p class="info">🔄 Probando envíos múltiples...</p>';
+            
+            // Limpiar dataLayer primero
+            clearDataLayer();
+            
+            // Llenar y enviar múltiples veces
+            setTimeout(() => testForm(), 500);
+            setTimeout(() => testForm(), 1500);
+            setTimeout(() => testForm(), 2500);
+            
+            // Verificar resultados después de 5 segundos
+            setTimeout(() => {
+                const leadSubmitEvents = window.dataLayer?.filter(item => item.event === 'lead_submit') || [];
+                results.innerHTML = `
+                    <p><strong>Eventos lead_submit enviados:</strong> ${leadSubmitEvents.length}</p>
+                    <p class="${leadSubmitEvents.length === 1 ? 'success' : 'error'}">
+                        ${leadSubmitEvents.length === 1 ? '✅ Solo 1 evento enviado (correcto)' : '❌ Múltiples eventos enviados (incorrecto)'}
+                    </p>
+                `;
+            }, 5000);
+        }
+
+        // Función para verificar TrustedForm
+        function checkTrustedForm() {
+            const results = document.getElementById('trustedform-results');
+            
+            const trustedFormStatus = {
+                windowTrustedForm: !!window.TrustedForm,
+                getCertUrl: !!(window.TrustedForm && window.TrustedForm.getCertUrl),
+                token: window.TrustedForm?.getCertUrl?.() || 'No disponible'
+            };
+
+            results.innerHTML = `
+                <h3>🔐 TrustedForm Status:</h3>
+                <p><strong>window.TrustedForm:</strong> ${trustedFormStatus.windowTrustedForm ? '✅ Disponible' : '❌ No disponible'}</p>
+                <p><strong>getCertUrl method:</strong> ${trustedFormStatus.getCertUrl ? '✅ Disponible' : '❌ No disponible'}</p>
+                <p><strong>Token actual:</strong> ${trustedFormStatus.token}</p>
+            `;
+
+            console.log('🔐 TrustedForm status:', trustedFormStatus);
+        }
+
+        // Función para ejecutar todas las pruebas
+        function runAllTests() {
+            console.log('🧪 Iniciando todas las pruebas...');
+            checkDataLayer();
+            checkTrustedForm();
+            
+            setTimeout(() => {
+                testForm();
+            }, 2000);
+        }
+
+        // Auto-ejecutar verificación inicial
+        window.addEventListener('load', () => {
+            console.log('🚀 Página de pruebas cargada');
+            checkDataLayer();
+            checkTrustedForm();
+        });
+    </script>
+</body>
+</html>

@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Services from '@/components/Services'
@@ -11,30 +14,108 @@ import FAQ from '@/components/FAQ'
 import Contact from '@/components/Contact'
 import LeadForm from '@/components/LeadForm'
 import Footer from '@/components/Footer'
-import dynamicImport from 'next/dynamic'
-const StickyLeadForm = dynamicImport(() => import('@/components/StickyLeadForm'), { ssr: false })
 
 // Configuración para export estático
 export const dynamic = 'error'
 export const revalidate = 0
 
 export default function Home() {
+  const [isDesktop, setIsDesktop] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const setFromMQ = () => setIsDesktop(mq.matches)
+    setFromMQ()
+    mq.addEventListener('change', setFromMQ)
+    return () => mq.removeEventListener('change', setFromMQ)
+  }, [])
+
+  // No renderizar formularios hasta que estemos en el cliente
+  if (!isClient) {
+    return (
+      <>
+        <Header />
+        <div className="lg:mr-96">
+          <Hero />
+          <Services />
+          <Process />
+          <Materials />
+          <Projects />
+          <Testimonials />
+          <Certifications />
+          <ServiceArea />
+          <FAQ />
+          <Contact />
+          <Footer />
+        </div>
+      </>
+    )
+  }
+
   return (
-    <main className="min-h-screen">
-      <StickyLeadForm />
+    <>
       <Header />
-      <Hero />
-      <Services />
-      <Process />
-      <Materials />
-      <Projects />
-      <Testimonials />
-      <Certifications />
-      <ServiceArea />
-      <FAQ />
-      <Contact />
-      <LeadForm />
-      <Footer />
-    </main>
+      
+      {isDesktop ? (
+        <>
+          {/* Desktop: contenido con barra lateral fija */}
+          <div className="lg:mr-96">
+            <Hero />
+            <Services />
+            <Process />
+            <Materials />
+            <Projects />
+            <Testimonials />
+            <Certifications />
+            <ServiceArea />
+            <FAQ />
+            <Contact />
+            <Footer />
+          </div>
+
+          {/* Formulario lateral fijo para PC */}
+          <div id="form-section" className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-30 overflow-y-auto">
+            <div className="p-6">
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-gray-900 text-center">🏠 Get Your Free Quote</h2>
+                <p className="text-sm text-gray-600 text-center mt-1">Complete consultation</p>
+              </div>
+              <div id="lead-form-desktop" className="border-2 border-teal-200 rounded-2xl p-2">
+                <LeadForm formId="lead-form-desktop" />
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Móvil: formulario al inicio */}
+          <div id="form-section" className="bg-white border-b border-gray-200 shadow-sm">
+            <div className="p-4">
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-gray-900 text-center">🏠 Get Your Free Quote</h2>
+                <p className="text-sm text-gray-600 text-center mt-1">Complete consultation</p>
+              </div>
+              <div id="lead-form-mobile" className="border-2 border-teal-200 rounded-2xl p-2">
+                <LeadForm formId="lead-form-mobile" />
+              </div>
+            </div>
+          </div>
+
+          <Hero />
+          <Services />
+          <Process />
+          <Materials />
+          <Projects />
+          <Testimonials />
+          <Certifications />
+          <ServiceArea />
+          <FAQ />
+          <Contact />
+          <Footer />
+        </>
+      )}
+    </>
   )
 }

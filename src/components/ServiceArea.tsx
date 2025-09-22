@@ -192,7 +192,7 @@ const ServiceArea = () => {
             </p>
             <button 
               onClick={() => {
-                const element = document.querySelector('#lead-form')
+                const element = document.querySelector('#form-section')
                 if (element) {
                   element.scrollIntoView({ behavior: 'smooth' })
                 }
