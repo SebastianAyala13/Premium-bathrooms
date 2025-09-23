@@ -167,46 +167,46 @@ export default function LeadForm({ formId = 'lead-form' }) {
           <p className="text-gray-600 text-sm">Fast response. No obligation.</p>
         </div>
       )}
-      <div className={`${isDesktopForm ? 'space-y-2 flex-1' : 'space-y-4'}`}>
+      <div className={`${isDesktopForm ? 'space-y-1.5 flex-1' : 'space-y-3'}`}>
         <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>First name</label>
-            <input name="first_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input name="first_name" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Last name</label>
-            <input name="last_name" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input name="last_name" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
         </div>
 
         <div>
           <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Address</label>
-          <input name="address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+          <input name="address" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
         </div>
         
         <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-3 gap-4'}`}>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>City</label>
-            <input name="city" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input name="city" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>State</label>
-            <input name="state" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} placeholder="CA or California" />
+            <input name="state" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} placeholder="CA or California" />
           </div>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>ZIP</label>
-            <input name="zip_code" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input name="zip_code" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
         </div>
 
         <div className={`grid grid-cols-1 ${isDesktopForm ? 'gap-2' : 'sm:grid-cols-2 gap-4'}`}>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Email</label>
-            <input type="email" name="email_address" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input type="email" name="email_address" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
           <div>
             <label className={`block ${isDesktopForm ? 'text-xs' : 'text-sm'} font-medium`}>Phone</label>
-            <input name="phone_home" required className={`mt-1 w-full rounded-xl border ${isDesktopForm ? 'p-2 text-sm' : 'p-3'}`} />
+            <input name="phone_home" required className={`mt-1 w-full rounded-lg border ${isDesktopForm ? 'p-1.5 text-xs' : 'p-2 text-sm'}`} />
           </div>
         </div>
 
@@ -227,19 +227,19 @@ export default function LeadForm({ formId = 'lead-form' }) {
 
       <input ref={tfHiddenRef} type="hidden" name="trusted_form_cert_id" />
 
-      <input type="submit" name="submit" data-tf-element-role="submit" disabled={loading} value={loading ? 'Sending…' : 'Submit'} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''} cursor-pointer`} />
-
-      <label data-tf-element-role="consent-language" className={`rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'} bg-gray-50 block`}>
-        <p id="tcpa_text" className={`${isDesktopForm ? 'text-xs' : 'text-xs'} leading-relaxed`}>
+      <label data-tf-element-role="consent-language" className={`rounded-lg border ${isDesktopForm ? 'p-1.5' : 'p-2'} bg-gray-50 block`}>
+        <p id="tcpa_text" className={`${isDesktopForm ? 'text-[10px]' : 'text-[11px]'} leading-tight`}>
           By clicking Submit, You agree to give express consent to receive marketing communications regarding Home Improvement services by automatic dialing system and pre-recorded calls and artificial voice messages from <a className="underline" href="/partners" target="_blank" rel="noreferrer">Home Services Partners</a> at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registry. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
           <a className="underline" href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> and 
           <a className="underline ml-1" href="/terms-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>.
         </p>
-        <div className={`${isDesktopForm ? 'mt-1' : 'mt-2'}`}>
-          <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>I agree to be contacted.</span>
+        <div className={`${isDesktopForm ? 'mt-1' : 'mt-1.5'}`}>
+          <span className={isDesktopForm ? 'text-[10px]' : 'text-[11px]'}>I agree to be contacted.</span>
           <input type="hidden" name="consent-language" value="on" />
         </div>
       </label>
+
+      <input type="submit" name="submit" data-tf-element-role="submit" disabled={loading} value={loading ? 'Sending…' : 'Submit'} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''} cursor-pointer`} />
       </div>
     </form>
   )
