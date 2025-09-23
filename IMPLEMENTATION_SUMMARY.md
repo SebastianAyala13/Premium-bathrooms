@@ -116,7 +116,7 @@ const payload = {
   landing_page: window.location.href,
   repair_or_replace: f.get('repair_or_replace')?.toString() || '',
   tcpaText: document.getElementById('tcpa_text')?.innerText || '',
-  tcpa_consent: f.get('consent-language') === 'on'
+  consent_language: f.get('consent-language') === 'on'
 };
 ```
 

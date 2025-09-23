@@ -351,7 +351,7 @@
                 'lp_campaign_id', 'lp_campaign_key', 'lp_s1', 'lp_s2', 'lp_response',
                 'city', 'state', 'zip_code', 'first_name', 'last_name', 'address',
                 'phone_home', 'email_address', 'ip_address', 'trusted_form_cert_id',
-                'landing_page', 'repair_or_replace', 'tcpaText', 'tcpa_consent'
+                'landing_page', 'repair_or_replace', 'tcpaText', 'consent_language'
             ];
 
             // Simular payload que se enviaría a Zapier
@@ -374,7 +374,7 @@
                 landing_page: window.location.href,
                 repair_or_replace: 'replace',
                 tcpaText: 'Mock TCPA text',
-                tcpa_consent: true
+                consent_language: true
             };
 
             const missingFields = requiredFields.filter(field => !(field in mockPayload));

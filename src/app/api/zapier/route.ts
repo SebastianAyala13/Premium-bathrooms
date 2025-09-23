@@ -35,7 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       landing_page: body.landing_page ?? '',
       repair_or_replace: body.repair_or_replace ?? '',
       tcpaText: body.tcpaText ?? '',
-      tcpa_consent: !!body.tcpa_consent,
+      consent_language: !!body.consent_language,
     }
 
     const hook = process.env.ZAPIER_HOOK_URL
