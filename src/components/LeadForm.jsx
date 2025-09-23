@@ -159,7 +159,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
   const isDesktopForm = formId === 'lead-form-desktop'
   
   return (
-    <form ref={formRef} id={formId} onSubmit={onSubmit} className={`${isDesktopForm ? 'max-w-full h-full flex flex-col' : 'max-w-2xl mx-auto'} p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200`}>
+    <form ref={formRef} id={formId} onSubmit={onSubmit} data-tf-element-role="offer" className={`${isDesktopForm ? 'max-w-full h-full flex flex-col' : 'max-w-2xl mx-auto'} p-[1px] rounded-2xl bg-gradient-to-r from-primary-200 to-secondary-200`}>
       <div className={`bg-white/90 backdrop-blur rounded-2xl ${isDesktopForm ? 'p-3 flex-1 flex flex-col' : 'p-6 md:p-8'} shadow-xl`}>
       {!isDesktopForm && (
         <div className="text-center mb-6">
@@ -227,11 +227,9 @@ export default function LeadForm({ formId = 'lead-form' }) {
 
       <input ref={tfHiddenRef} type="hidden" name="trusted_form_cert_id" />
 
-      <button type="submit" disabled={loading} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''}`}>
-        {loading ? 'Sending…' : 'Submit'}
-      </button>
+      <input type="submit" name="submit" data-tf-element-role="submit" disabled={loading} value={loading ? 'Sending…' : 'Submit'} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''} cursor-pointer`} />
 
-      <div className={`rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'} bg-gray-50`}>
+      <label data-tf-element-role="consent-language" className={`rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'} bg-gray-50 block`}>
         <p id="tcpa_text" className={`${isDesktopForm ? 'text-xs' : 'text-xs'} leading-relaxed`}>
           By clicking Submit, You agree to give express consent to receive marketing communications regarding Home Improvement services by automatic dialing system and pre-recorded calls and artificial voice messages from <a className="underline" href="/partners" target="_blank" rel="noreferrer">Home Services Partners</a> at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registry. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
           <a className="underline" href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> and 
@@ -241,7 +239,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
           <span className={isDesktopForm ? 'text-xs' : 'text-sm'}>I agree to be contacted.</span>
           <input type="hidden" name="consent-language" value="on" />
         </div>
-      </div>
+      </label>
       </div>
     </form>
   )
