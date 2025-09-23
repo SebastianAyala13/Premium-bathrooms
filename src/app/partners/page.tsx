@@ -109,9 +109,9 @@ const Partners = () => {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-primary-600 to-secondary-500 text-white py-16">
         <div className="container-custom">
-          <motion.div
+        <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
@@ -140,10 +140,10 @@ const Partners = () => {
                   <div className="text-sm opacity-80">Support</div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
         </div>
-      </div>
+            </div>
 
       {/* Partners Grid */}
       <div className="container-custom py-16">
@@ -151,10 +151,10 @@ const Partners = () => {
           {Object.entries(partners).map(([category, partnerList], categoryIndex) => {
             const IconComponent = categoryIcons[category] || Building2
             return (
-              <motion.div
+            <motion.div
                 key={category}
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
                 className="bg-white rounded-2xl shadow-xl overflow-hidden"
               >
@@ -164,8 +164,8 @@ const Partners = () => {
                     <div>
                       <h2 className="text-2xl font-bold">{category}</h2>
                       <p className="opacity-90">{partnerList.length} Partners</p>
-                    </div>
-                  </div>
+                </div>
+                </div>
                 </div>
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -180,13 +180,13 @@ const Partners = () => {
                         <div className="text-sm font-medium text-gray-900">{partner}</div>
                       </motion.div>
                     ))}
-                  </div>
                 </div>
-              </motion.div>
+              </div>
+            </motion.div>
             )
           })}
         </div>
-      </div>
+          </div>
 
       {/* CTA Section */}
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16">
@@ -208,7 +208,7 @@ const Partners = () => {
               <span>Get Your Free Quote</span>
               <ExternalLink className="w-5 h-5" />
             </Link>
-          </motion.div>
+        </motion.div>
         </div>
       </div>
     </div>

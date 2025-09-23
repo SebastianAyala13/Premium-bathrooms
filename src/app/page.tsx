@@ -75,7 +75,7 @@ export default function Home() {
           </div>
 
           {/* Formulario lateral fijo para PC */}
-          <div id="form-section" className="fixed right-0 top-0 h-full w-80 bg-white border-l border-gray-200 shadow-xl z-30 flex flex-col">
+          <div id="form-section" className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 bg-white border-l border-gray-200 shadow-xl z-30 flex flex-col">
             <div className="p-4 flex-shrink-0">
               <div className="mb-3">
                 <h2 className="text-lg font-bold text-gray-900 text-center">🏠 Get Your Free Quote</h2>

@@ -227,6 +227,10 @@ export default function LeadForm({ formId = 'lead-form' }) {
 
       <input ref={tfHiddenRef} type="hidden" name="trusted_form_cert_id" />
 
+      <button type="submit" disabled={loading} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''}`}>
+        {loading ? 'Sending…' : 'Submit'}
+      </button>
+
       <div className={`rounded-xl border ${isDesktopForm ? 'p-2' : 'p-3'} bg-gray-50`}>
         <p id="tcpa_text" className={`${isDesktopForm ? 'text-xs' : 'text-xs'} leading-relaxed`}>
           By clicking Submit, You agree to give express consent to receive marketing communications regarding Home Improvement services by automatic dialing system and pre-recorded calls and artificial voice messages from <a className="underline" href="/partners" target="_blank" rel="noreferrer">Home Services Partners</a> at the phone number and E-mail address provided by you, including wireless numbers, if applicable, even if you have previously registered the provided number on the Do not Call Registry. SMS/MMS and data messaging rates may apply. You understand that my consent here is not a condition for buying any goods or services. You agree to the 
@@ -238,10 +242,6 @@ export default function LeadForm({ formId = 'lead-form' }) {
           <input type="hidden" name="consent-language" value="on" />
         </div>
       </div>
-
-      <button type="submit" disabled={loading} className={`w-full rounded-2xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white ${isDesktopForm ? 'py-2' : 'py-3'} font-semibold shadow-lg hover:shadow-xl transition disabled:opacity-60 ${isDesktopForm ? 'text-sm' : ''}`}>
-        {loading ? 'Sending…' : 'Submit'}
-      </button>
       </div>
     </form>
   )
