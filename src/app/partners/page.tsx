@@ -10,7 +10,7 @@ export const dynamic = 'error'
 const Partners = () => {
   const partners = {
     'Home Improvement & Remodeling': [
-      '1800 Remodel', 'Bath Experts', 'Bath Experts LLC', 'Bath Remodel by Capital', 'BCI Acrylic', 'Billy.com',
+      '1800 Remodel', 'Bath Experts', 'Bath Experts LLC', 'Bath Remodel by Capital', 'Bath concepts', 'Billy.com',
       'Jacuzzi', 'Premier Home Pros', 'Zintex', 'My Bath Colorado', 'Tubbs by Grubbs', 'New Pro',
       'New Bath Today', 'Kohler', 'Long Home', 'BathWorks of Michigan', 'CareFree Home Pros',
       'American Remodeling', 'Anderson Windows', 'Champion Windows and Home Exteriors', 'Clear Choice Home Improvement',
