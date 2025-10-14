@@ -32,6 +32,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       email_address: body.email_address ?? '',
       ip_address: ip,
       trusted_form_cert_id: body.trusted_form_cert_id ?? 'NOT_PROVIDED',
+      jornaya_lead_id: body.jornaya_lead_id ?? 'NOT_PROVIDED',
       landing_page: body.landing_page ?? '',
       repair_or_replace: body.repair_or_replace ?? '',
       tcpaText: body.tcpaText ?? '',

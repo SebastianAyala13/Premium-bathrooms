@@ -16,7 +16,11 @@ const Partners = () => {
       'American Remodeling', 'Anderson Windows', 'Champion Windows and Home Exteriors', 'Clear Choice Home Improvement',
       'Continental Siding', 'C Michael Exteriors', 'Champion Siding', 'Capital Construction Contracting',
       'Future Remodeling', 'Home Genius Exteriors', 'New Pro Home Remodeling', 'Victory Home Remodeling',
-      'DaBella', 'SmartHome Solutions USA', 'Superior Home'
+      'DaBella', 'SmartHome Solutions USA', 'Superior Home', 'Adventum.io', '1800-Remodel', 'OpenHome',
+      'OpenHome Pros', 'Homelix', 'Rex Direct Net, Inc.', 'Pointer Leads Inc.', 'Everconnect',
+      'Alpine Digital Group, Inc.', 'RGR Marketing', 'EverContractor', 'SolarGiveback', 'MediaDevoted1',
+      'NewStrata', 'National Home Project', 'American Home Shield', 'Midwest Bath Company', 'Rocky Mountain Bath Company',
+      'Bath Wizard', 'Floor Coverings International', 'American Standard'
     ],
     'Roofing & Exteriors': [
       'Crowther Roofing and Cooling', 'Advanced Roofing, Inc.', 'Baker Roofing Company', 'Best Choice Roofing',

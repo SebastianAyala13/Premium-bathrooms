@@ -59,6 +59,21 @@ export default function LeadForm({ formId = 'lead-form' }) {
     return poll()
   }
 
+  async function waitForJornayaToken(maxWaitMs = 2000) {
+    const start = Date.now()
+    const poll = async () => {
+      const leadIdInput = document.getElementById('leadid_token')
+      const val = leadIdInput?.value || ''
+      if (val) {
+        return val
+      }
+      if (Date.now() - start >= maxWaitMs) return ''
+      await new Promise(r => setTimeout(r, 150))
+      return poll()
+    }
+    return poll()
+  }
+
   async function onSubmit(e) {
     e.preventDefault()
     
@@ -73,8 +88,9 @@ export default function LeadForm({ formId = 'lead-form' }) {
     setLoading(true)
     
     const formEl = e.currentTarget
-    // Espera breve para que TrustedForm complete el token
+    // Espera breve para que TrustedForm y Jornaya completen los tokens
     await waitForTrustedFormToken(2000)
+    await waitForJornayaToken(2000)
     const f = new FormData(formEl)
 
     const payload = {
@@ -92,6 +108,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
       phone_home: f.get('phone_home')?.toString().trim() || '',
       email_address: f.get('email_address')?.toString().trim() || '',
       trusted_form_cert_id: (tfHiddenRef.current?.value || tfToken || f.get('trusted_form_cert_id')?.toString() || ''),
+      jornaya_lead_id: f.get('universal_leadid')?.toString() || '',
       landing_page: window.location.href,
       repair_or_replace: f.get('repair_or_replace')?.toString() || '',
       tcpaText: document.getElementById('tcpa_text')?.innerText || '',
@@ -226,6 +243,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
       </div>
 
       <input ref={tfHiddenRef} type="hidden" name="trusted_form_cert_id" />
+      <input id="leadid_token" type="hidden" name="universal_leadid" value="" />
 
       <label data-tf-element-role="consent-language" className={`rounded-lg border ${isDesktopForm ? 'p-1.5' : 'p-2'} bg-gray-50 block`}>
         <p id="tcpa_text" className={`${isDesktopForm ? 'text-[10px]' : 'text-[11px]'} leading-tight`}>

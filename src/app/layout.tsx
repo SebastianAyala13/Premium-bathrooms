@@ -291,6 +291,28 @@ export default function RootLayout({
           <noscript>
             <img src='https://api.trustedform.com/ns.gif' />
           </noscript>
+          
+          {/* Jornaya Lead ID Script */}
+          <script
+            id="LeadiDscript"
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  var s = document.createElement('script');
+                  s.id = 'LeadiDscript_campaign';
+                  s.type = 'text/javascript';
+                  s.async = true;
+                  s.src = '//create.lidstatic.com/campaign/e65966e8-6ae1-2bff-6dd1-97b99a2c15cf.js?snippet_version=2';
+                  var LeadiDscript = document.getElementById('LeadiDscript');
+                  LeadiDscript.parentNode.insertBefore(s, LeadiDscript);
+                })();
+              `
+            }}
+          />
+          <noscript>
+            <img src='//create.leadid.com/noscript.gif?lac=1A0362DA-90B6-2BCA-983C-BC60069F93FC&lck=e65966e8-6ae1-2bff-6dd1-97b99a2c15cf&snippet_version=2' />
+          </noscript>
          
          {/* Favicon and app icons */}
          <link rel="icon" href="/logoprimebath.png" />
