@@ -3,18 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function LeadForm({ formId = 'lead-form' }) {
-  const [loading, setLoading] = useState(false)
-  const [tfToken, setTfToken] = useState('')
-  const [zipCodeError, setZipCodeError] = useState('')
-  const [isZipCodeValid, setIsZipCodeValid] = useState(true)
-  const tfHiddenRef = useRef(null)
-  const hasSubmitted = useRef(false)
-  const formRef = useRef(null)
-  const router = useRouter()
-
-  // Lista de zipcodes autorizados
-  const authorizedZipCodes = [
+// Lista base de zipcodes autorizados (histórico completo)
+const baseAuthorizedZipCodes = [
     '36439', '36482', '36505', '36518', '36521', '36523', '36525', '36526', '36527', '36528', '36529', '36530', '36532', '36535', '36541', '36542', '36549', '36551', '36553', '36555', '36561', '36567', '36571', '36572', '36574', '36575', '36576', '36577', '36578', '36579', '36580', '36581', '36582', '36585', '36587', '36602', '36604', '36608', '36609', '36619', '36693', '36695',
     '85001', '85002', '85003', '85004', '85005', '85006', '85007', '85008', '85009', '85010', '85011', '85012', '85013', '85014', '85015', '85016', '85017', '85018', '85019', '85020', '85021', '85022', '85023', '85024', '85026', '85027', '85028', '85029', '85030', '85031', '85032', '85033', '85034', '85035', '85036', '85037', '85038', '85039', '85040', '85041', '85042', '85043', '85044', '85045', '85046', '85048', '85050', '85051', '85053', '85054', '85060', '85061', '85062', '85063', '85064', '85065', '85066', '85067', '85068', '85069', '85070', '85071', '85072', '85073', '85074', '85075', '85076', '85078', '85079', '85080', '85082', '85083', '85085', '85086', '85087', '85117', '85118', '85119', '85120', '85121', '85122', '85123', '85127', '85128', '85130', '85131', '85132', '85135', '85137', '85138', '85139', '85140', '85142', '85143', '85147', '85172', '85173', '85178', '85190', '85191', '85193', '85194',
     '85201', '85202', '85203', '85204', '85205', '85206', '85207', '85208', '85209', '85210', '85211', '85212', '85213', '85214', '85215', '85216', '85224', '85225', '85226', '85233', '85234', '85236', '85242', '85244', '85246', '85248', '85249', '85250', '85251', '85252', '85253', '85254', '85255', '85256', '85257', '85258', '85259', '85260', '85261', '85262', '85263', '85264', '85266', '85267', '85268', '85269', '85271', '85274', '85275', '85277', '85280', '85281', '85282', '85283', '85284', '85285', '85286', '85287', '85295', '85296', '85297', '85298', '85299',
@@ -119,17 +109,866 @@ export default function LeadForm({ formId = 'lead-form' }) {
     '05501'
   ]
 
-  // Función para validar zipcode
-  const validateZipCode = (zipCode) => {
-    const cleanZipCode = zipCode.trim()
-    const isValid = authorizedZipCodes.includes(cleanZipCode)
+// Nueva lista suministrada por el cliente (permite valores sin cero inicial y duplicados)
+const additionalZipCodesRaw = `
+6001
+6001
+6002
+6002
+6010
+6010
+6013
+6013
+6016
+6016
+6018
+6018
+6019
+6019
+6021
+6021
+6023
+6023
+6024
+6024
+6026
+6026
+6027
+6027
+6029
+6029
+6031
+6031
+6032
+6032
+6033
+6033
+6035
+6035
+6037
+6037
+6039
+6039
+6040
+6040
+6042
+6042
+6043
+6043
+6051
+6051
+6052
+6052
+6053
+6053
+6057
+6057
+6058
+6058
+6060
+6060
+6062
+6062
+6063
+6063
+6065
+6065
+6066
+6066
+6067
+6067
+6068
+6068
+6069
+6069
+6070
+6070
+6071
+6071
+6073
+6073
+6074
+6074
+6076
+6076
+6078
+6078
+6081
+6081
+6082
+6082
+6084
+6084
+6085
+6085
+6088
+6088
+6089
+6089
+6090
+6090
+6091
+6091
+6092
+6092
+6093
+6093
+6095
+6095
+6096
+6096
+6098
+6098
+6101
+6101
+6103
+6103
+6105
+6105
+6106
+6106
+6107
+6107
+6108
+6108
+6109
+6109
+6110
+6110
+6111
+6111
+6112
+6112
+6114
+6114
+6117
+6117
+6118
+6118
+6119
+6119
+6120
+6120
+6152
+6152
+6226
+6226
+6231
+6231
+6232
+6232
+6234
+6234
+6235
+6235
+6237
+6237
+6238
+6238
+6239
+6239
+6241
+6241
+6242
+6242
+6243
+6243
+6247
+6247
+6248
+6248
+6249
+6249
+6250
+6250
+6254
+6254
+6255
+6255
+6256
+6256
+6259
+6259
+6260
+6260
+6262
+6262
+6264
+6264
+6265
+6265
+6266
+6266
+6268
+6268
+6277
+6277
+6278
+6278
+6279
+6279
+6280
+6280
+6281
+6281
+6282
+6282
+6320
+6320
+6330
+6330
+6331
+6331
+6333
+6333
+6334
+6334
+6335
+6335
+6336
+6336
+6339
+6339
+6340
+6340
+6351
+6351
+6353
+6353
+6354
+6354
+6355
+6355
+6357
+6357
+6359
+6359
+6360
+6360
+6365
+6365
+6370
+6370
+6371
+6371
+6374
+6374
+6375
+6375
+6377
+6377
+6378
+6378
+6379
+6379
+6380
+6380
+6382
+6382
+6384
+6384
+6385
+6385
+6389
+6389
+6401
+6401
+6403
+6403
+6405
+6405
+6409
+6409
+6410
+6410
+6412
+6412
+6413
+6413
+6415
+6415
+6416
+6416
+6417
+6417
+6418
+6418
+6419
+6419
+6420
+6420
+6422
+6422
+6423
+6423
+6424
+6424
+6426
+6426
+6437
+6437
+6438
+6438
+6441
+6441
+6442
+6442
+6443
+6443
+6447
+6447
+6450
+6450
+6451
+6451
+6455
+6455
+6457
+6457
+6460
+6460
+6461
+6461
+6468
+6468
+6469
+6469
+6470
+6470
+6471
+6471
+6472
+6472
+6473
+6473
+6475
+6475
+6477
+6477
+6478
+6478
+6479
+6479
+6480
+6480
+6481
+6481
+6482
+6482
+6483
+6483
+6484
+6484
+6488
+6488
+6489
+6489
+6492
+6492
+6497
+6497
+6498
+6498
+6510
+6510
+6511
+6511
+6512
+6512
+6513
+6513
+6514
+6514
+6515
+6515
+6516
+6516
+6517
+6517
+6518
+6518
+6519
+6519
+6524
+6524
+6525
+6525
+6604
+6604
+6605
+6605
+6606
+6606
+6607
+6607
+6608
+6608
+6610
+6610
+6611
+6611
+6612
+6612
+6614
+6614
+6615
+6615
+6650
+6650
+6701
+6701
+6702
+6702
+6704
+6704
+6705
+6705
+6706
+6706
+6708
+6708
+6710
+6710
+6712
+6712
+6716
+6716
+6750
+6750
+6751
+6751
+6752
+6752
+6754
+6754
+6755
+6755
+6756
+6756
+6757
+6757
+6758
+6758
+6759
+6759
+6762
+6762
+6763
+6763
+6770
+6770
+6776
+6776
+6777
+6777
+6778
+6778
+6779
+6779
+6782
+6782
+6783
+6783
+6784
+6784
+6785
+6785
+6786
+6786
+6787
+6787
+6790
+6790
+6791
+6791
+6793
+6793
+6794
+6794
+6795
+6795
+6796
+6796
+6798
+6798
+6801
+6801
+6804
+6804
+6807
+6807
+6810
+6810
+6811
+6811
+6812
+6812
+6820
+6820
+6824
+6824
+6825
+6825
+6828
+6828
+6830
+6830
+6831
+6831
+6840
+6840
+6850
+6850
+6851
+6851
+6853
+6853
+6854
+6854
+6855
+6855
+6870
+6870
+6877
+6877
+6878
+6878
+6880
+6880
+6883
+6883
+6890
+6890
+6896
+6896
+6897
+6897
+6901
+6901
+6902
+6902
+6903
+6903
+6905
+6905
+6906
+6906
+6907
+6907
+6910
+6910
+1001
+1001
+1002
+1002
+1003
+1003
+1007
+1007
+1008
+1008
+1009
+1009
+1010
+1010
+1011
+1011
+1012
+1012
+1013
+1013
+1020
+1020
+1022
+1022
+1026
+1026
+1027
+1027
+1028
+1028
+1029
+1029
+1030
+1030
+1032
+1032
+1033
+1033
+1034
+1034
+1035
+1035
+1036
+1036
+1038
+1038
+1039
+1039
+1040
+1040
+1050
+1050
+1053
+1053
+1054
+1054
+1056
+1056
+1057
+1057
+1060
+1060
+1062
+1062
+1063
+1063
+1066
+1066
+1069
+1069
+1070
+1070
+1071
+1071
+1072
+1072
+1073
+1073
+1075
+1075
+1077
+1077
+1079
+1079
+1080
+1080
+1081
+1081
+1082
+1082
+1084
+1084
+1085
+1085
+1086
+1086
+1088
+1088
+1089
+1089
+1093
+1093
+1095
+1095
+1096
+1096
+1097
+1097
+1098
+1098
+1103
+1103
+1104
+1104
+1105
+1105
+1106
+1106
+1107
+1107
+1108
+1108
+1109
+1109
+1118
+1118
+1119
+1119
+1128
+1128
+1129
+1129
+1151
+1151
+1199
+1199
+1201
+1201
+1220
+1220
+1222
+1222
+1223
+1223
+1224
+1224
+1225
+1225
+1226
+1226
+1229
+1229
+1230
+1230
+1235
+1235
+1236
+1236
+1237
+1237
+1238
+1238
+1240
+1240
+1242
+1242
+1243
+1243
+1244
+1244
+1245
+1245
+1247
+1247
+1253
+1253
+1254
+1254
+1255
+1255
+1256
+1256
+1257
+1257
+1258
+1258
+1259
+1259
+1260
+1260
+1262
+1262
+1264
+1264
+1266
+1266
+1267
+1267
+1270
+1270
+1301
+1301
+1330
+1330
+1337
+1337
+1338
+1338
+1339
+1339
+1340
+1340
+1341
+1341
+1342
+1342
+1343
+1343
+1344
+1344
+1346
+1346
+1347
+1347
+1349
+1349
+1350
+1350
+1351
+1351
+1354
+1354
+1355
+1355
+1360
+1360
+1364
+1364
+1367
+1367
+1370
+1370
+1373
+1373
+1375
+1375
+1376
+1376
+1378
+1378
+1379
+1379
+1521
+1521
+`.trim()
+
+const normalizeZipForSet = (value) => {
+  const digits = (value || '').toString().replace(/\D/g, '')
+  if (!digits) return ''
+  return digits.padStart(5, '0').slice(-5)
+}
+
+const additionalZipCodes = Array.from(
+  new Set(
+    additionalZipCodesRaw
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(normalizeZipForSet)
+      .filter(Boolean)
+  )
+)
+
+const authorizedZipCodesSet = new Set([...baseAuthorizedZipCodes, ...additionalZipCodes])
+
+const normalizeZipCodeInput = (zipCode) => {
+  const digits = (zipCode || '').toString().replace(/\D/g, '')
+  if (!digits) return ''
+  if (digits.length < 4) return digits
+  return digits.padStart(5, '0').slice(-5)
+}
+
+export default function LeadForm({ formId = 'lead-form' }) {
+  const [loading, setLoading] = useState(false)
+  const [tfToken, setTfToken] = useState('')
+  const [zipCodeError, setZipCodeError] = useState('')
+  const [isZipCodeValid, setIsZipCodeValid] = useState(true)
+  const tfHiddenRef = useRef(null)
+  const hasSubmitted = useRef(false)
+  const formRef = useRef(null)
+  const router = useRouter()
+
+  const validateZipCode = (zipCode, { updateField = false } = {}) => {
+    const digitsOnly = (zipCode || '').toString().replace(/\D/g, '')
+    const normalizedZip = normalizeZipCodeInput(zipCode)
+    const hasEnoughDigits = digitsOnly.length >= 5 || digitsOnly.length === 4
+    const isValid = hasEnoughDigits && authorizedZipCodesSet.has(normalizedZip)
+
     setIsZipCodeValid(isValid)
-    if (!isValid && cleanZipCode.length >= 5) {
+
+    if (!isValid && hasEnoughDigits) {
       setZipCodeError('Sorry, we don\'t currently service this area. Please check back later!')
+    } else if (isValid) {
+      setZipCodeError('')
+      if (updateField && formRef.current) {
+        const field = formRef.current.querySelector('input[name="zip_code"]')
+        if (field) field.value = normalizedZip
+      }
     } else {
       setZipCodeError('')
     }
-    return isValid
+
+    return { isValid, normalizedZip }
   }
 
   // Log para verificar cuántas instancias se montan
@@ -207,8 +1046,9 @@ export default function LeadForm({ formId = 'lead-form' }) {
     // Validar zipcode antes de continuar
     const formEl = e.currentTarget
     const zipCodeValue = new FormData(formEl).get('zip_code')?.toString().trim() || ''
+    const { isValid: isZipValid, normalizedZip } = validateZipCode(zipCodeValue, { updateField: true })
     
-    if (!validateZipCode(zipCodeValue)) {
+    if (!isZipValid) {
       console.log('🚫 Form submission blocked - invalid zipcode:', zipCodeValue)
       return
     }
@@ -220,6 +1060,9 @@ export default function LeadForm({ formId = 'lead-form' }) {
     await waitForTrustedFormToken(2000)
     await waitForJornayaToken(2000)
     const f = new FormData(formEl)
+    if (normalizedZip) {
+      f.set('zip_code', normalizedZip)
+    }
 
     const payload = {
       lp_campaign_id: process.env.NEXT_PUBLIC_LP_CAMPAIGN_ID || 'Provided',
@@ -229,7 +1072,7 @@ export default function LeadForm({ formId = 'lead-form' }) {
       lp_response: 'JSON',
       city: f.get('city')?.toString().trim() || '',
       state: f.get('state')?.toString().trim() || '',
-      zip_code: f.get('zip_code')?.toString().trim() || '',
+      zip_code: normalizedZip || (f.get('zip_code')?.toString().trim() || ''),
       first_name: f.get('first_name')?.toString().trim() || '',
       last_name: f.get('last_name')?.toString().trim() || '',
       address: f.get('address')?.toString().trim() || '',
@@ -288,6 +1131,8 @@ export default function LeadForm({ formId = 'lead-form' }) {
       
       formEl.reset()
       setTfToken('')
+      setIsZipCodeValid(true)
+      setZipCodeError('')
       router.push('/thank-you')
     } catch (err) {
       console.error(err)
